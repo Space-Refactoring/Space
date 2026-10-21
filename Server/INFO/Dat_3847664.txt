@@ -1,0 +1,14 @@
+Captain
+alina
+Raumschiff
+2
+Guthaben
+718928
+Legaler Auftrag
+435
+Geladen?
+ja
+Illegaler Auftrag
+0
+Geladen?
+nein

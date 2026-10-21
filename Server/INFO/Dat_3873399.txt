@@ -1,0 +1,14 @@
+Captain
+milla
+Raumschiff
+2
+Guthaben
+540942
+Legaler Auftrag
+330
+Geladen?
+ja
+Illegaler Auftrag
+0
+Geladen?
+nein

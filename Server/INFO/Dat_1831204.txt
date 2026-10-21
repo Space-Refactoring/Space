@@ -1,0 +1,14 @@
+Captain
+valentina
+Raumschiff
+2
+Guthaben
+1427142
+Legaler Auftrag
+210
+Geladen?
+ja
+Illegaler Auftrag
+0
+Geladen?
+nein

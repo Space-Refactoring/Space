@@ -1,0 +1,14 @@
+Captain
+lennert
+Raumschiff
+2
+Guthaben
+905979
+Legaler Auftrag
+6
+Geladen?
+ja
+Illegaler Auftrag
+0
+Geladen?
+nein

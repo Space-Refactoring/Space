@@ -1,0 +1,14 @@
+Captain
+alice
+Raumschiff
+2
+Guthaben
+1153207
+Legaler Auftrag
+481
+Geladen?
+ja
+Illegaler Auftrag
+0
+Geladen?
+nein

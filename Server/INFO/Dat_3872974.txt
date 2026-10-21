@@ -1,0 +1,14 @@
+Captain
+emely
+Raumschiff
+2
+Guthaben
+1297157
+Legaler Auftrag
+162
+Geladen?
+nein
+Illegaler Auftrag
+0
+Geladen?
+nein

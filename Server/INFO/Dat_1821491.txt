@@ -1,0 +1,14 @@
+Captain
+jamie
+Raumschiff
+2
+Guthaben
+3225123
+Legaler Auftrag
+9
+Geladen?
+nein
+Illegaler Auftrag
+0
+Geladen?
+nein

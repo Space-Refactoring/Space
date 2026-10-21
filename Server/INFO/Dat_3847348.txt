@@ -1,0 +1,14 @@
+Captain
+felix
+Raumschiff
+2
+Guthaben
+57148
+Legaler Auftrag
+0
+Geladen?
+nein
+Illegaler Auftrag
+70
+Geladen?
+ja

@@ -1,0 +1,14 @@
+Captain
+thilo
+Raumschiff
+2
+Guthaben
+1727235
+Legaler Auftrag
+6
+Geladen?
+ja
+Illegaler Auftrag
+0
+Geladen?
+nein

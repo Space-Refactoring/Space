@@ -1,0 +1,422 @@
+unit Unit1;
+
+{$mode objfpc}{$H+}
+
+interface
+
+uses
+  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
+  ExtCtrls;
+
+type
+
+  { TForm1 }
+
+  TForm1 = class(TForm)
+    Image1: TImage;
+    Memo1: TMemo;
+    Timer1: TTimer;
+    procedure FormCreate(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormKeyPress(Sender: TObject; var Key: char);
+    procedure Timer1Timer(Sender: TObject);
+  private
+    { private declarations }
+  public
+    { public declarations }
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+{$R *.lfm}
+type
+  str10  = string[10];
+  str20  = string[20];
+  str40  = string[40];
+  str80  = string[80];
+  Dock = record                                                                 //  Angedocktes Schiff
+             Nr       : longint;
+             Captain  : str40;
+             Typ      : str10;
+             Guthaben : longint;
+             Legal    : integer;
+             LadLegal : str10;
+             Illegal  : integer;
+             LadIlleg : str10;
+            end;
+var
+  einn     :string[30];                   { name der eingabedatei }
+  einf     :text;                         { filediskriptor        }
+  ausn     :string[30];                   { name der eingabedatei }
+  ausf     :text;                         { filediskriptor        }
+
+  ProgrammPath: string;                                                         //  Pfad des Programm's
+  ServerPath: string;                                                           //  Pfad des Serververzeichnisses
+  Schiff     :Dock;                       { Schiff das angelegt hat }
+  bef        :char;
+  rfid       :string;                     { Nr vom RFID }
+  Preis      :longint;
+  Zeit       : byte;
+//******************************************************************************
+procedure PrgPathLesen;
+var  i,j:integer;
+begin
+     i := 0;                                                                    //  Anfang Programmname = 0
+     ProgrammPath := ParamStr(0);                                               //  Pfad der programm EXE ermitteln
+     for j := 1 to length(ProgrammPath) do begin                                //S Für alle Zeichen des Aufrufstrings
+       if ProgrammPath[j] = '\' then begin                                      //? Anfang Dateiname
+          i := j;                                                               //  Position im String merken
+        end;                                                                    //E Anfang Dateiname
+     end;                                                                       //E S.: Für alle Zeichen des Aufrufstrings
+     ProgrammPath := copy(ProgrammPath,1,i);                                    //  Pfad ermitteln
+end;
+//******************************************************************************
+function datsc : byte;                      {  Daten in Datei schreiben }
+var
+  erg : byte;                               { Ergebnis: 1 = OK; ff = Fehler }
+begin
+  erg:=1;                                   {  Noch kein Fehler }
+  assign(ausf,ServerPath+'\Dat_'+inttostr(Schiff.Nr)+'.txt'); {  Handelsdatei schreiben }
+  {$I-}
+  rewrite(ausf);                            {  Auftragsdatei schreiben }
+  {$I+}
+  if IOResult = 0 then begin                {? Datei vorhanden }
+    writeln(ausf,'Captain');                {  Captain setzen }
+		writeln(ausf,Schiff.Captain);
+    writeln(ausf,'Raumschiff');             {  Raumschiff setzen }
+		writeln(ausf,Schiff.Typ);
+    writeln(ausf,'Guthaben');               {  Guthaben setzen }
+		writeln(ausf,Schiff.Guthaben);
+    writeln(ausf,'Legaler Auftrag');        {  legalen Auftrag setzen }
+		writeln(ausf,Schiff.Legal);
+    writeln(ausf,'Geladen?');               {  Geladen? }
+		writeln(ausf,Schiff.LadLegal);
+    writeln(ausf,'Illegaler Auftrag');      {  ilegalen Auftrag setzen }
+		writeln(ausf,Schiff.Illegal);
+    writeln(ausf,'Geladen?');               {  Geladen? }
+		writeln(ausf,Schiff.LadIlleg);
+    close(ausf);                            {  Datei schlieáen }
+
+    assign(ausf,ServerPath+'\Log_'+inttostr(Schiff.Nr)+'.txt'); {  Handelsdatei schreiben }
+    {$I-}
+    append(ausf);                            {  Auftragsdatei schreiben }
+    {$I+}
+    if IOResult = 0 then begin                {? Datei vorhanden }
+      writeln(ausf,'----- Upgrade ------');
+      writeln(ausf,'Captain');                {  Captain setzen }
+			writeln(ausf,Schiff.Captain);
+      writeln(ausf,'Raumschiff');             {  Raumschiff setzen }
+			writeln(ausf,Schiff.Typ);
+      writeln(ausf,'Guthaben');               {  Guthaben setzen }
+			writeln(ausf,Schiff.Guthaben);
+      writeln(ausf,'Legaler Auftrag');        {  legalen Auftrag setzen }
+			writeln(ausf,Schiff.Legal);
+      writeln(ausf,'Geladen?');               {  Geladen? }
+			writeln(ausf,Schiff.LadLegal);
+      writeln(ausf,'Illegaler Auftrag');      {  ilegalen Auftrag setzen }
+			writeln(ausf,Schiff.Illegal);
+      writeln(ausf,'Geladen?');               {  Geladen? }
+			writeln(ausf,Schiff.LadIlleg);
+      close(ausf);                            {  Datei schlieáen }
+    end else begin                            {N Datei vorhanden }
+      {$I-}
+      rewrite(ausf);                            {  Auftragsdatei schreiben }
+      {$I+}
+      if IOResult = 0 then begin                {? Datei vorhanden }
+        writeln(ausf,'----------------------');
+        writeln(ausf,'Captain');                {  Captain setzen }
+				writeln(ausf,Schiff.Captain);
+        writeln(ausf,'Raumschiff');             {  Raumschiff setzen }
+				writeln(ausf,Schiff.Typ);
+        writeln(ausf,'Guthaben');               {  Guthaben setzen }
+				writeln(ausf,Schiff.Guthaben);
+        writeln(ausf,'Legaler Auftrag');        {  legalen Auftrag setzen }
+				writeln(ausf,Schiff.Legal);
+        writeln(ausf,'Geladen?');               {  Geladen? }
+				writeln(ausf,Schiff.LadLegal);
+        writeln(ausf,'Illegaler Auftrag');      {  ilegalen Auftrag setzen }
+				writeln(ausf,Schiff.Illegal);
+        writeln(ausf,'Geladen?');               {  Geladen? }
+				writeln(ausf,Schiff.LadIlleg);
+        close(ausf);                            {  Datei schlieáen }
+      end else begin                            {N Datei vorhanden }
+        erg:=$ff;                             {  Fehler setzen }
+      end;                                      {E if: Datei vorhanden }
+    end;                                      {E if: Datei vorhanden }
+    //  Info erzeugen
+    assign(ausf,ServerPath+'\info\Dat_'+inttostr(Schiff.Nr)+'.txt'); {  Handelsdatei schreiben }
+    {$I-}
+    rewrite(ausf);                            {  Auftragsdatei schreiben }
+    {$I+}
+    if IOResult = 0 then begin                {? Datei vorhanden }
+      writeln(ausf,'Captain');                {  Captain setzen }
+  		writeln(ausf,Schiff.Captain);
+      writeln(ausf,'Raumschiff');             {  Raumschiff setzen }
+  		writeln(ausf,Schiff.Typ);
+      writeln(ausf,'Guthaben');               {  Guthaben setzen }
+  		writeln(ausf,Schiff.Guthaben);
+      writeln(ausf,'Legaler Auftrag');        {  legalen Auftrag setzen }
+  		writeln(ausf,Schiff.Legal);
+      writeln(ausf,'Geladen?');               {  Geladen? }
+  		writeln(ausf,Schiff.LadLegal);
+      writeln(ausf,'Illegaler Auftrag');      {  ilegalen Auftrag setzen }
+  		writeln(ausf,Schiff.Illegal);
+      writeln(ausf,'Geladen?');               {  Geladen? }
+  		writeln(ausf,Schiff.LadIlleg);
+      close(ausf);                            {  Datei schlieáen }
+    end;                                      {E if: Datei vorhanden }
+  end else begin                            {N Datei vorhanden }
+    erg:=$ff;                               {  Fehler setzen }
+  end;                                      {E if: Datei vorhanden }
+  datsc:=erg;
+end;
+//******************************************************************************
+function datle : byte;                      {  Daten aus Datei lesen }
+var
+  egstr : string;
+  erg : byte;                               { Ergebnis: 1 = OK; ff = Fehler }
+begin
+  erg:=1;                                   {  Noch kein Fehler }
+  assign(einf,ServerPath+'\Dat_'+inttostr(Schiff.Nr)+'.txt'); {  Handelsdatei lesen }
+  {$I-}
+  reset(einf);                              {  Auftragsdatei ”ffnen }
+  {$I+}
+  if IOResult = 0 then begin                {? Datei vorhanden }
+    readln(einf,egstr);                     {  Zeile 1 lesen }
+    if (egstr = 'Captain') then begin       {? Captain }
+      readln(einf,Schiff.Captain);          {  lesen }
+    end else begin                          {N Captain}
+      erg:=$ff;                             {  Fehler setzen }
+    end;                                    {E if: Captain }
+    readln(einf,egstr);                     {  Zeile esen }
+    if (egstr = 'Raumschiff') then begin    {? Raumschiff }
+      readln(einf,Schiff.Typ);              {  lesen }
+    end else begin                          {N Raumschiff }
+      erg:=$ff;                             {  Fehler setzen }
+    end;                                    {E if: Raumschiff }
+    readln(einf,egstr);                     {  Zeile esen }
+    if (egstr = 'Guthaben') then begin      {? Guthaben }
+      readln(einf,Schiff.Guthaben);         {  lesen }
+    end else begin                          {N Guthaben}
+      erg:=$ff;                             {  Fehler setzen }
+    end;                                    {E if: Guthaben }
+    readln(einf,egstr);                     {  Zeile esen }
+    if (egstr = 'Legaler Auftrag') then begin    {? legaler Auftrag }
+      readln(einf,Schiff.Legal);            {  lesen }
+    end else begin                          {N legaler Auftrag}
+      erg:=$ff;                             {  Fehler setzen }
+    end;                                    {E if: legaler Auftrag }
+    readln(einf,egstr);                     {  Zeile esen }
+    if (egstr = 'Geladen?') then begin      {? Was geladen ? }
+      readln(einf,Schiff.LadLegal);         {  lesen }
+    end else begin                          {N Guthaben}
+      erg:=$ff;                             {  Fehler setzen }
+    end;                                    {E if: Guthaben }
+    readln(einf,egstr);                     {  Zeile esen }
+    if (egstr = 'Illegaler Auftrag') then begin    {? ilegaler Auftrag }
+      readln(einf,Schiff.Illegal);          {  lesen }
+    end else begin                          {N ilegaler Auftrag}
+      erg:=$ff;                             {  Fehler setzen }
+    end;                                    {E if: ilegaler Auftrag }
+    readln(einf,egstr);                     {  Zeile esen }
+    if (egstr = 'Geladen?') then begin      {? Was geladen ? }
+      readln(einf,Schiff.LadIlleg);         {  lesen }
+    end else begin                          {N Guthaben}
+      erg:=$ff;                             {  Fehler setzen }
+    end;                                    {E if: Guthaben }
+    close(einf);                            {  Datei schlieáen }
+  end else begin                            {N Datei vorhanden }
+      erg:=$ff;                             {  Fehler setzen }
+  end;                                      {E if: Datei vorhanden }
+  datle:=erg;
+end;
+//******************************************************************************
+procedure IniLesen;                                                             //  Ini-Datei lesen
+var
+  egstr : string;
+begin
+  ServerPath:='d:\';                                                            //  Pfad zum Server auf Standart
+  Preis:=10000;
+  assign(einf,ProgrammPath+'upgrade.ini');                                        //  Dateiname festlegen
+  {$I-}
+  reset(einf);                              {  Auftragsdatei ”ffnen }
+  {$I+}
+  if IOResult = 0 then begin                {? Datei vorhanden }
+    readln(einf,egstr);                     {  Zeile 1 lesen }
+    if (egstr = 'Server') then begin        {? Raumschiff }
+      readln(einf,ServerPath);              {  lesen }
+    end;                                    {E if: Raumschiff }
+    readln(einf,egstr);                     {  Zeile 1 lesen }
+    if (egstr = 'Preis') then begin         {? Raumschiff }
+      readln(einf,egstr);                   {  lesen }
+      Preis:=StrToInt(egstr);               {  Preis lesen }
+    end;                                    {E if: Raumschiff }
+    close(einf);                            {  Datei schlieáen }
+  end;                                      {E if: Datei vorhanden }
+end;
+//******************************************************************************
+procedure SchiffsWerft;
+var
+  erg : byte;
+  i   : integer;
+begin
+  erg:=0;
+  Form1.Memo1.Text:='Schiffswerft Andromeda';
+  Form1.Memo1.Lines.Add('');
+  Zeit:=3;
+  Form1.Memo1.Visible:=true;
+  Form1.Memo1.Lines.Add('Guten Tag Captain '+Schiff.Captain);
+  Form1.Memo1.Lines.Add('');
+  if (schiff.typ = '1') then begin                                            //? Schiffstyp 1
+    if (Schiff.Guthaben >= Preis) then begin
+      if (Schiff.LadLegal = 'nein') and (Schiff.LadIlleg = 'nein') then begin
+        if (Schiff.Legal = 0) and (Schiff.Illegal = 0) then begin
+          Schiff.Guthaben:=Schiff.Guthaben-Preis;
+          Schiff.Typ:='2';
+          Schiff.Legal:=0;
+          Schiff.LadLegal:='nein';
+          Schiff.Illegal:=0;
+          Schiff.LadIlleg:='nein';
+          erg:=datsc;                                                                   //  Serverdatei schreiben
+          if (erg = 1) then begin                                                       //? OK
+            Form1.Memo1.Lines.Add('Ihr Schiff wurde auf den Typ 2 erweitert');                //  Anzeige
+          end else begin                                              //N OK
+            Application.MessageBox('Netzwerkfehler: Mitarbeiter verständigen','',0);     //  Anzeige
+          end;                                                        //E if: ok
+        end else begin
+           Form1.Memo1.Lines.Add('Bitte erledigen Sie erst den Auftrag');        //  Anzeige
+        end;
+      end else begin
+         Form1.Memo1.Lines.Add('Das Schiff muß leer sein');        //  Anzeige
+      end;
+    end else begin
+       Form1.Memo1.Lines.Add('Sie haben nicht genug Geld');     //  Anzeige
+       Form1.Memo1.Lines.Add('für diesen Auftrag');     //  Anzeige
+    end;
+  end else begin
+    Form1.Memo1.Lines.Add('Ihr Schiff ist auf dem neuesten Stand');     //  Anzeige
+  end;
+  Form1.Memo1.Lines.Add('');
+  Form1.Memo1.Lines.Add('Danke für Ihren Besuch');     //  Anzeige
+  Form1.Memo1.Lines.Add('und guten Flug');                //  Anzeige
+end;
+//******************************************************************************
+procedure Tastenaw(Key : Word);
+var
+  erg : byte;
+  // $0d = Enter
+  // $25 = Pfeil rechts
+  // $26 = Pfeil auf
+  // $27 = Pfeil links
+  // $28 = Pfeil ab
+  // $70 = F1
+  // $71 = F2
+  // $72 = F3
+  // $73 = F4
+  // $74 = F5
+  // $75 = F6
+  // $76 = F7
+  // $77 = F8
+  // $78 = F9
+  // $79 = F10
+begin
+  case key of                                                                   //> Taste
+    $1b: begin                                                                  //C ESC
+         end;
+    $0c: begin                                                                  //C ?
+         end;
+    // $25: begin                                                                  //C Pfeil links
+    //     end;
+    // $26: begin                                                                  //C Pfeil auf
+    //     end;
+    // $27: begin                                                                  //C Pfeil rechts
+    //     end;
+    // $28: begin                                                                  //C Pfeil abw.
+    //     end;
+    $70: begin                                                                  //C F1
+         end;
+    $71: begin                                                                  //C F2
+         end;
+    $72: begin                                                                  //C F3
+         end;
+    $73: begin                                                                  //C F4
+         end;
+    $74: begin                                                                  //C F5
+         end;
+    $75: begin                                                                  //C F6
+         end;
+    $76: begin                                                                  //C F7
+         end;
+    $77: begin                                                                  //C F8
+         end;
+    $78: begin                                                                  //C F9
+         end;
+    $79: begin                                                                  //C F10
+         end;
+    else begin
+       bef:=char(key);
+       if (key >= $30) and (key <= $39) then begin                              //? Nummer
+         rfid:=rfid+bef;
+         if (length(rfid) > 10) then begin
+           rfid:=copy(rfid,2,11);
+         end;
+       end else begin                                                         //N Nummer
+         if (key >= 13) and (key <= ord('z'))  then begin                     //? Tastertureingabe
+           if (length(rfid) = 10) then begin
+             erg:=1;
+             Schiff.Nr:=StrToInt(rfid);
+             rfid:='';                                                 //  Neuer Chip notwendig
+           end else begin
+              erg:=0;
+           end;
+           if (erg = 1) then begin                                     //? OK
+             erg:=datle;                                                 //  Serverdatei lesen
+             if (erg = 1) then begin
+             //? OK
+               SchiffsWerft;
+             end;
+           end;
+         end;                                                                   //E if: Tastertureingabe
+         rfid:='';                                                              //  Neuer Chip notwendig
+       end;                                                                     //E Nummer
+     end;                                                                       //E case: Taste, else
+  end;                                                                          //E case: Taste
+end;                                                                            //E procedure
+
+{ TForm1 }
+
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+PrgPathLesen;                                                                 //  Startpfad lesen
+IniLesen;                                                                     //  Ini-File lesen
+Form1.Image1.Picture.LoadFromFile(ProgrammPath+'\Upgrade.bmp');
+end;
+
+procedure TForm1.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState
+  );
+begin
+Tastenaw(Key);                                                                     //  Tasten auswerten
+end;
+
+procedure TForm1.FormKeyPress(Sender: TObject; var Key: char);
+begin
+
+end;
+
+procedure TForm1.Timer1Timer(Sender: TObject);
+begin
+  if Memo1.Visible then begin
+    if (Zeit > 0) then begin
+      dec(Zeit);
+    end else begin
+      Memo1.Visible:=false;
+    end;
+  end;
+end;
+
+
+end.
+

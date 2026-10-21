@@ -1,0 +1,14 @@
+Captain
+sophie
+Raumschiff
+1
+Guthaben
+980381
+Legaler Auftrag
+591
+Geladen?
+ja
+Illegaler Auftrag
+0
+Geladen?
+nein

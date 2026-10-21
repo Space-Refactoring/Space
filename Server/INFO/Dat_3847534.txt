@@ -1,0 +1,14 @@
+Captain
+anton
+Raumschiff
+2
+Guthaben
+770905
+Legaler Auftrag
+0
+Geladen?
+nein
+Illegaler Auftrag
+97
+Geladen?
+nein

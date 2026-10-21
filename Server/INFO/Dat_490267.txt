@@ -1,0 +1,14 @@
+Captain
+clara
+Raumschiff
+1
+Guthaben
+480675
+Legaler Auftrag
+32
+Geladen?
+nein
+Illegaler Auftrag
+0
+Geladen?
+nein

@@ -1,0 +1,14 @@
+Captain
+Marie
+Raumschiff
+2
+Guthaben
+1285759
+Legaler Auftrag
+329
+Geladen?
+ja
+Illegaler Auftrag
+0
+Geladen?
+nein

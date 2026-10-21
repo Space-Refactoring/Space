@@ -1,0 +1,14 @@
+Captain
+leo
+Raumschiff
+2
+Guthaben
+1689520
+Legaler Auftrag
+424
+Geladen?
+ja
+Illegaler Auftrag
+0
+Geladen?
+nein

@@ -1,0 +1,14 @@
+Captain
+Jona
+Raumschiff
+2
+Guthaben
+2159300
+Legaler Auftrag
+189
+Geladen?
+ja
+Illegaler Auftrag
+0
+Geladen?
+nein

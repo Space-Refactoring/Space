@@ -1,0 +1,260 @@
+object Form1: TForm1
+  Left = 424
+  Height = 566
+  Top = 170
+  Width = 792
+  HorzScrollBar.Visible = False
+  VertScrollBar.Visible = False
+  BorderStyle = bsNone
+  Caption = 'Space'
+  ClientHeight = 566
+  ClientWidth = 792
+  Color = clBlack
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  OnCreate = FormCreate
+  OnKeyDown = FormKeyDown
+  Position = poDefault
+  LCLVersion = '1.6.0.4'
+  Visible = True
+  object Image1: TImage
+    Left = -8
+    Height = 137
+    Top = 0
+    Width = 161
+    AutoSize = True
+  end
+  object L_Sektor: TLabel
+    Left = 320
+    Height = 37
+    Top = 0
+    Width = 131
+    Caption = 'Sektor X'
+    Color = clBlue
+    Font.Color = clWindowText
+    Font.Height = -32
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+    Transparent = False
+  end
+  object P_Name: TPanel
+    Left = 0
+    Height = 121
+    Top = 0
+    Width = 345
+    ClientHeight = 121
+    ClientWidth = 345
+    Color = clRed
+    ParentColor = False
+    TabOrder = 0
+    object Label1: TLabel
+      Left = 14
+      Height = 24
+      Top = 22
+      Width = 310
+      Caption = 'Bitte tragen Sie Ihren Namen ein:'
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+    object E_Name: TEdit
+      Left = 14
+      Height = 41
+      Top = 62
+      Width = 305
+      AutoSize = False
+      Font.Color = clWindowText
+      Font.Height = -24
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 0
+    end
+  end
+  object M_Anz: TMemo
+    Left = 760
+    Height = 25
+    Top = 544
+    Width = 33
+    BorderStyle = bsNone
+    Color = clBlack
+    Lines.Strings = (
+      'M_m'
+      'uell'
+    )
+    TabOrder = 1
+  end
+  object P_Schiff: TPanel
+    Left = 48
+    Height = 161
+    Top = 48
+    Width = 697
+    ClientHeight = 161
+    ClientWidth = 697
+    Color = clRed
+    ParentColor = False
+    TabOrder = 2
+    object M_Schiff1: TMemo
+      Left = 6
+      Height = 145
+      Top = 6
+      Width = 321
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'Courier New'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 0
+    end
+    object M_Schiff2: TMemo
+      Left = 334
+      Height = 145
+      Top = 6
+      Width = 353
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'Courier New'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 1
+    end
+  end
+  object M_Info: TMemo
+    Left = 48
+    Height = 73
+    Top = 488
+    Width = 697
+    BorderStyle = bsNone
+    Color = clBlue
+    Font.CharSet = HEBREW_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -27
+    Font.Name = 'Courier New'
+    Font.Pitch = fpFixed
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    Lines.Strings = (
+      'Bitte identifizieren Sie sich.'
+    )
+    ParentFont = False
+    TabOrder = 3
+  end
+  object P_Auftrag: TPanel
+    Left = 48
+    Height = 241
+    Top = 230
+    Width = 697
+    Caption = 'P_Auftrag'
+    ClientHeight = 241
+    ClientWidth = 697
+    Color = clYellow
+    ParentColor = False
+    TabOrder = 4
+    object L_Links: TLabel
+      Left = 6
+      Height = 227
+      Top = 6
+      Width = 120
+      Caption = '<'
+      Color = clBlue
+      Font.CharSet = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -200
+      Font.Name = 'Courier New'
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+      Transparent = False
+    end
+    object L_Rechts: TLabel
+      Left = 566
+      Height = 227
+      Top = 6
+      Width = 120
+      Caption = '>'
+      Color = clBlue
+      Font.CharSet = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -200
+      Font.Name = 'Courier New'
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+      Transparent = False
+    end
+    object M_Auftrag: TMemo
+      Left = 134
+      Height = 227
+      Top = 6
+      Width = 425
+      Font.CharSet = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'Courier New'
+      Font.Style = [fsBold]
+      Lines.Strings = (
+        'M_Auftrag'
+      )
+      ParentFont = False
+      TabOrder = 0
+    end
+  end
+  object P_BeEntl: TPanel
+    Left = 48
+    Height = 241
+    Top = 232
+    Width = 697
+    ClientHeight = 241
+    ClientWidth = 697
+    Color = clYellow
+    ParentColor = False
+    TabOrder = 5
+    object M_BeEntl: TMemo
+      Left = 6
+      Height = 225
+      Top = 6
+      Width = 681
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'Courier New'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 0
+    end
+  end
+  object P_Code: TPanel
+    Left = 176
+    Height = 65
+    Top = 272
+    Width = 217
+    ClientHeight = 65
+    ClientWidth = 217
+    Color = clRed
+    ParentColor = False
+    TabOrder = 6
+    object E_Code: TEdit
+      Left = 14
+      Height = 30
+      Top = 14
+      Width = 185
+      AutoSize = False
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'Courier New'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 0
+    end
+  end
+  object Timer1: TTimer
+    OnTimer = Timer1Timer
+    left = 720
+    top = 16
+  end
+end

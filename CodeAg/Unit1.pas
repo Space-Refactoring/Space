@@ -1,0 +1,822 @@
+unit Unit1;
+
+{$MODE Delphi}
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, ExtCtrls, StdCtrls;
+
+type
+
+  { TForm1 }
+
+  TForm1 = class(TForm)
+    Image1: TImage;
+    L_Sektor: TLabel;
+    P_Name: TPanel;
+    Label1: TLabel;
+    E_Name: TEdit;
+    M_Anz: TMemo;
+    P_Schiff: TPanel;
+    M_Schiff1: TMemo;
+    M_Schiff2: TMemo;
+    M_Info: TMemo;
+    P_Auftrag: TPanel;
+    L_Links: TLabel;
+    M_Auftrag: TMemo;
+    L_Rechts: TLabel;
+    P_BeEntl: TPanel;
+    M_BeEntl: TMemo;
+    P_Code: TPanel;
+    E_Code: TEdit;
+    Timer1: TTimer;
+    procedure FormCreate(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure P_BeEntlClick(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
+  private
+    { Private-Deklarationen }
+  public
+    { Public-Deklarationen }
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+{$R *.lfm}
+
+type
+  str10  = string[10];
+  str20  = string[20];
+  str40  = string[40];
+  str80  = string[80];
+  auftr  = record                                                               //  Ein Auftrag
+             startsek : byte;
+             startort : str40;
+             zielsek  : byte;
+             zielort  : str40;
+             ladung   : str40;
+             lohn     : longint;
+            end;
+  wauftr = record                                                               //  Ein Auftrag
+             nr       : longint;
+             startsek : byte;
+             startort : str40;
+             zielsek  : byte;
+             zielort  : str40;
+             ladung   : str40;
+             lohn     : longint;
+            end;
+  ereign = record                                                               //  Ein Ereignis
+             was      : str40;
+             defekt   : str40;
+             kosten   : longint;
+            end;
+  Dock = record                                                                 //  Angedocktes Schiff
+             Nr       : longint;
+             Captain  : str40;
+             Typ      : str10;
+             Guthaben : longint;
+             Legal    : integer;
+             LadLegal : str10;
+             Illegal  : integer;
+             LadIlleg : str10;
+            end;
+var
+  einn     :string[30];                   { name der eingabedatei }
+  einf     :text;                         { filediskriptor        }
+  ausn     :string[30];                   { name der eingabedatei }
+  ausf     :text;                         { filediskriptor        }
+
+  ProgrammPath: string;                                                         //  Pfad des Programm's
+  ServerPath: string;                                                           //  Pfad des Serververzeichnisses
+  DiskPath: string;                                                             //  Pfad der Disk
+
+  Sektor   :byte;                         { Sektor des Rechners }
+  IniSektor:byte;                         { Sektor aus der Ini-Datei }
+
+  bef      :char;
+  prgwo    :byte;                         { Wo ist das Programm:
+                                            0 = Identifizieren
+                                            1 = Auftrag suchen
+                                            2 = Start quittieren
+                                            3 = Ziel bearbeiten }
+
+//  uprg     :byte;                         { Ablaufmerker Teilprogramme }
+  A_Auftr    :array[1..1500] of auftr;    { A-Aufträge }
+  A_Auftr_vb :integer;                    { Auftragsliste voll bis ... }
+  B_Auftr    :array[1..1500] of auftr;    { B-Aufträge }
+  B_Auftr_vb :integer;                    { Auftragsliste voll bis ... }
+  Ereignis   :array[1..1000] of ereign;   { Ereignisliste }
+  Ereign_vb  :integer;                    { Ereignisliste voll bis ... }
+  Ereig_Akt  :integer;                    { aktives Ereignis }
+  A_Code     :array[1..500] of str10;     { Code für Schiff A }
+  A_Code_vb  :integer;                    { Codeliste voll bis ... }
+  B_Code     :array[1..500] of str10;     { Code für Schiff B }
+  B_Code_vb  :integer;                    { Codeliste voll bis ... }
+
+  W_Aktiv    :byte;                       { gewählter Auftrag }
+  W_Max      :byte;                       { maximale Auftragsanzahl }
+
+  Schiff     :Dock;                       { Schiff das angelegt hat }
+  rfid       :string;                     { Nr vom RFID }
+
+  A5_Code     :array[1..500] of str10;     { Code für Schiff A }
+  A5_Code_vb  :integer;                    { Codeliste voll bis ... }
+  B5_Code     :array[1..500] of str10;     { Code für Schiff B }
+  B5_Code_vb  :integer;                    { Codeliste voll bis ... }
+  A5_Next     :word;
+  B5_Next     :word;
+
+  A6_Code     :array[1..500] of str10;     { Code für Schiff A }
+  A6_Code_vb  :integer;                    { Codeliste voll bis ... }
+  B6_Code     :array[1..500] of str10;     { Code für Schiff B }
+  B6_Code_vb  :integer;                    { Codeliste voll bis ... }
+  A6_Next     :word;
+  B6_Next     :word;
+
+  A7_Code     :array[1..500] of str10;     { Code für Schiff A }
+  A7_Code_vb  :integer;                    { Codeliste voll bis ... }
+  B7_Code     :array[1..500] of str10;     { Code für Schiff B }
+  B7_Code_vb  :integer;                    { Codeliste voll bis ... }
+  A7_Next     :word;
+  B7_Next     :word;
+//******************************************************************************
+function StrToIntDW (egstr : string) : integer;
+var
+  erg : integer;
+  i   : integer;
+  flg : boolean;
+begin
+  while(copy(egstr,length(egstr),1) = ' ') do begin
+    egstr:=copy(egstr,1,length(egstr)-1);
+  end;
+  if (length(egstr) = 0) then begin
+      erg:=9999;
+  end else begin
+    flg:=true;
+    for i:=1 to length(egstr) do begin
+      if (ord(egstr[i]) < ord('0')) then begin
+        flg:=false;
+      end;
+      if (ord(egstr[i]) > ord('9')) then begin
+        flg:=false;
+      end;
+    end;
+    if (flg) then begin
+      erg:=StrToInt(egstr);
+    end else begin
+      erg:=9999;
+    end;
+  end;
+  StrToIntDW:=erg;
+end;
+//******************************************************************************
+procedure CodeLesen;
+var
+  egstr : string;
+begin
+ A5_Code_vb:=0;
+ A5_Next:=0;
+ B5_Code_vb:=0;
+ B5_Next:=0;
+
+ A6_Code_vb:=0;
+ A6_Next:=0;
+ B6_Code_vb:=0;
+ B6_Next:=0;
+
+ A7_Code_vb:=0;
+ A7_Next:=0;
+ B7_Code_vb:=0;
+ B7_Next:=0;
+
+ // Sektor 5A                                                                //> Sektor
+ assign(einf,ServerPath+'\CODESS5A.dat');                             //  Dateiname festlegen
+ {$I-}
+ reset(einf);                                                                //  Auftragsdatei öffnen
+ {$I+}
+ if IOResult = 0 then begin                                                  //? Datei vorhanden
+   A5_Code_vb:=0;                                                             //  Noch kein Code
+   while not EOF(einf) do begin                                              //S ... bis Dateiende
+     inc(A5_Code_vb);                                                         //  Ein Code mehr
+     readln(einf,egstr);                                                     //  Eine Zeile lesen
+     A5_Code[A5_Code_vb]:=copy(egstr,1,4);                                     //  Code in das Feld
+   end;                                                                      //E S.: ... bis Dateiende
+   close(einf);                            {  Datei schlieáen }
+   A5_Next:=1;
+ end;                                      {E if: Datei vorhanden }
+
+ // Sektor 5B                                                                //> Sektor
+ assign(einf,ServerPath+'\CODESS5B.dat');                                   //  Dateiname festlegen
+ {$I-}
+ reset(einf);                                                                //  Auftragsdatei öffnen
+ {$I+}
+ if IOResult = 0 then begin                                                  //? Datei vorhanden
+   B5_Code_vb:=0;                                                             //  Noch kein Code
+   while not EOF(einf) do begin                                              //S ... bis Dateiende
+     inc(B5_Code_vb);                                                         //  Ein Code mehr
+     readln(einf,egstr);                                                     //  Eine Zeile lesen
+     B5_Code[B5_Code_vb]:=copy(egstr,1,4);                                     //  Code in das Feld
+   end;                                                                      //E S.: ... bis Dateiende
+   close(einf);                            {  Datei schlieáen }
+   B5_Next:=1;
+ end;                                      {E if: Datei vorhanden }
+
+ // Sektor 6A                                                                //> Sektor
+ assign(einf,ServerPath+'\CODESS6A.dat');                             //  Dateiname festlegen
+ {$I-}
+ reset(einf);                                                                //  Auftragsdatei öffnen
+ {$I+}
+ if IOResult = 0 then begin                                                  //? Datei vorhanden
+   A6_Code_vb:=0;                                                             //  Noch kein Code
+   while not EOF(einf) do begin                                              //S ... bis Dateiende
+     inc(A6_Code_vb);                                                         //  Ein Code mehr
+     readln(einf,egstr);                                                     //  Eine Zeile lesen
+     A6_Code[A6_Code_vb]:=copy(egstr,1,4);                                     //  Code in das Feld
+   end;                                                                      //E S.: ... bis Dateiende
+   close(einf);                            {  Datei schlieáen }
+   A6_Next:=1;
+ end;                                      {E if: Datei vorhanden }
+
+ // Sektor 6B                                                                //> Sektor
+ assign(einf,ServerPath+'\CODESS6B.dat');                                   //  Dateiname festlegen
+ {$I-}
+ reset(einf);                                                                //  Auftragsdatei öffnen
+ {$I+}
+ if IOResult = 0 then begin                                                  //? Datei vorhanden
+   B6_Code_vb:=0;                                                             //  Noch kein Code
+   while not EOF(einf) do begin                                              //S ... bis Dateiende
+     inc(B6_Code_vb);                                                         //  Ein Code mehr
+     readln(einf,egstr);                                                     //  Eine Zeile lesen
+     B6_Code[B6_Code_vb]:=copy(egstr,1,4);                                     //  Code in das Feld
+   end;                                                                      //E S.: ... bis Dateiende
+   close(einf);                            {  Datei schlieáen }
+   B6_Next:=1;
+ end;                                      {E if: Datei vorhanden }
+
+ // Sektor 7A                                                                //> Sektor
+ assign(einf,ServerPath+'\CODESS7A.dat');                             //  Dateiname festlegen
+ {$I-}
+ reset(einf);                                                                //  Auftragsdatei öffnen
+ {$I+}
+ if IOResult = 0 then begin                                                  //? Datei vorhanden
+   A7_Code_vb:=0;                                                             //  Noch kein Code
+   while not EOF(einf) do begin                                              //S ... bis Dateiende
+     inc(A7_Code_vb);                                                         //  Ein Code mehr
+     readln(einf,egstr);                                                     //  Eine Zeile lesen
+     A7_Code[A7_Code_vb]:=copy(egstr,1,4);                                     //  Code in das Feld
+   end;                                                                      //E S.: ... bis Dateiende
+   close(einf);                            {  Datei schlieáen }
+   A7_Next:=1;
+ end;                                      {E if: Datei vorhanden }
+
+ // Sektor 7B                                                                //> Sektor
+ assign(einf,ServerPath+'\CODESS7B.dat');                                   //  Dateiname festlegen
+ {$I-}
+ reset(einf);                                                                //  Auftragsdatei öffnen
+ {$I+}
+ if IOResult = 0 then begin                                                  //? Datei vorhanden
+   B7_Code_vb:=0;                                                             //  Noch kein Code
+   while not EOF(einf) do begin                                              //S ... bis Dateiende
+     inc(B7_Code_vb);                                                         //  Ein Code mehr
+     readln(einf,egstr);                                                     //  Eine Zeile lesen
+     B7_Code[B7_Code_vb]:=copy(egstr,1,4);                                     //  Code in das Feld
+   end;                                                                      //E S.: ... bis Dateiende
+   close(einf);                            {  Datei schlieáen }
+   B7_Next:=1;
+ end;                                      {E if: Datei vorhanden }
+end;
+//******************************************************************************
+procedure UseLesen;                                                             //  Use-Flags lesen
+var
+  egstr : string;
+begin
+  A5_Next:=1;
+  B5_Next:=1;
+
+  A6_Next:=1;
+  B6_Next:=1;
+
+  A7_Next:=1;
+  B7_Next:=1;
+
+  assign(einf,ServerPath+'\AgUse.txt');                                        //  Dateiname festlegen
+  {$I-}
+  reset(einf);                              {  Auftragsdatei ”ffnen }
+  {$I+}
+  if IOResult = 0 then begin                {? Datei vorhanden }
+    readln(einf,egstr);                     {  Sektor 5A }
+    if (egstr = 'Sektor5A') then begin
+      readln(einf,egstr);
+      A5_Next:=StrToInt(egstr);
+    end;
+
+    readln(einf,egstr);                     {  Sektor 5B }
+    if (egstr = 'Sektor5B') then begin
+      readln(einf,egstr);
+      B5_Next:=StrToInt(egstr);
+    end;
+
+    if (egstr = 'Sektor6A') then begin
+      readln(einf,egstr);
+      A6_Next:=StrToInt(egstr);
+    end;
+
+    readln(einf,egstr);                     {  Sektor 6B }
+    if (egstr = 'Sektor6B') then begin
+      readln(einf,egstr);
+      B6_Next:=StrToInt(egstr);
+    end;
+
+    readln(einf,egstr);                     {  Sektor 7A }
+    if (egstr = 'Sektor7A') then begin
+      readln(einf,egstr);
+      A7_Next:=StrToInt(egstr);
+    end;
+
+    readln(einf,egstr);                     {  Sektor 7B }
+    if (egstr = 'Sektor7B') then begin
+      readln(einf,egstr);
+      B7_Next:=StrToInt(egstr);
+    end;
+    close(einf);
+  end;
+end;
+//******************************************************************************
+procedure UseSchreiben;                                                         //  Use-Flags schreiben
+var
+  nr    : word;
+begin
+  assign(ausf,ServerPath+'\AgUse.txt');                                         //  Dateiname festlegen
+  {$I-}
+  rewrite(ausf);                            {  Auftragsdatei schreiben }
+  {$I+}
+  if IOResult = 0 then begin                {? Datei vorhanden }
+    Writeln(ausf,'Sektor5A');
+    Writeln(ausf,IntToStr(A5_next));
+    Writeln(ausf,'Sektor5B');
+    Writeln(ausf,IntToStr(B5_next));
+
+    Writeln(ausf,'Sektor6A');
+    Writeln(ausf,IntToStr(A6_next));
+    Writeln(ausf,'Sektor6B');
+    Writeln(ausf,IntToStr(B6_next));
+
+    Writeln(ausf,'Sektor7A');
+    Writeln(ausf,IntToStr(A7_next));
+    Writeln(ausf,'Sektor7B');
+    Writeln(ausf,IntToStr(B7_next));
+    close(ausf);                            {  Datei schlieáen }
+   end;                                      {E if: Datei vorhanden }
+end;
+//******************************************************************************
+function CodeAnz(init : boolean) : byte;                                       //  Aufträge anzeigen
+var
+  erg : byte;
+begin
+  erg:=0;                                                                       //  Kein Datensatz gewählt
+  if (A5_Code_vb = 0) or
+     (B5_Code_vb = 0) or
+     (A6_Code_vb = 0) or
+     (B6_Code_vb = 0) or
+     (A7_Code_vb = 0) or
+     (B7_Code_vb = 0) then begin
+       Form1.M_Info.Text:='abc';
+       Form1.M_Info.Text:=AnsiToUTF8('Code-Datei nicht gefunden ...');
+       erg:=1;
+  end else begin
+    if init then begin                                                            //? Init Anzeige
+      Form1.M_Info.Text:='abc';
+      Form1.M_Info.Text:=AnsiToUTF8('Bitte wählen Sie einen Sektor ...');
+      Form1.P_Auftrag.Visible:=true;
+      ;
+    end else begin                                                                //N Init Anzeige
+      if (ord(bef) = $0d) then begin                                              //? Cr
+        if (W_Aktiv > 0) and (W_Aktiv <= W_Max) then begin                         //? Im Legalen Bereich
+          erg:=W_Aktiv;                                                           //  Ergebnis melden
+        end;
+      end else begin                                                              //N Cr
+        if (ord(bef) = $25) then begin                                            //? Pfeil rechts
+          if (W_Aktiv > 1) then begin                                             //? Noch ein Auftrag
+            dec(W_Aktiv);                                                         //  Auftrag - 1
+          end;                                                                    //E if: Noch ein Auftrag
+        end else begin                                                            //N Pfeil rechts
+          if (ord(bef) = $27) then begin                                          //? Pfeil links
+            if (W_Aktiv < W_Max) then begin                                       //? Noch ein Auftrag
+              inc(W_Aktiv);                                                       //  Auftrag + 1
+            end;                                                                  //E if: Noch ein Auftrag
+          end;                                                                    //E if: Pfeil links
+        end;                                                                      //E if: Pfeil rechts
+      end;                                                                        //E if: Cr
+    end;                                                                          //E if: Init Anzeige
+
+    if (W_Aktiv = 0) or (W_Aktiv > W_Max) then begin                              //? Aktiver Auftrag nicht im Bereich
+      W_Aktiv:=1;                                                                 //  Auftrag 1 setzen
+    end;
+
+    Form1.M_Auftrag.Text:=AnsiToUTF8('');
+    Form1.M_Auftrag.Lines.Add(AnsiToUTF8(''));
+    Form1.M_Auftrag.Lines.Add(AnsiToUTF8(''));
+    Form1.M_Auftrag.Lines.Add(AnsiToUTF8('Code fuer Sektor '+IntToStr(W_Aktiv+4)));
+    if (erg > 0) then begin                                                       //? Datensatz gewählt
+      Form1.L_Links.Caption:='!';                                                 //  gewählt
+      Form1.L_Rechts.Caption:='!';
+      if (A5_next >= A5_Code_vb) then A5_next:=A5_Code_vb-1;
+      if (B5_next >= B5_Code_vb) then B5_next:=B5_Code_vb-1;
+      if (A6_next >= A6_Code_vb) then A6_next:=A6_Code_vb-1;
+      if (B6_next >= B6_Code_vb) then B6_next:=B6_Code_vb-1;
+      if (A7_next >= A7_Code_vb) then A7_next:=A7_Code_vb-1;
+      if (B7_next >= B7_Code_vb) then B7_next:=B7_Code_vb-1;
+      case (W_Aktiv+4) of
+      5: begin                                                                  // Sektor 5
+          if (schiff.typ = '1') then begin                                      //? Schiffstyp 1
+            Form1.M_Auftrag.Lines.Add(AnsiToUTF8(' '));
+            Form1.M_Auftrag.Lines.Add(AnsiToUTF8('Code =  '+A5_Code[A5_Next]));
+            inc(A5_Next);
+          end else begin
+            Form1.M_Auftrag.Lines.Add(AnsiToUTF8(' '));
+            Form1.M_Auftrag.Lines.Add(AnsiToUTF8('Code =  '+B5_Code[B5_Next]));
+            inc(B5_Next);
+          end;
+      end;
+      6: begin                                                                  // Sektor 6
+          if (schiff.typ = '1') then begin                                      //? Schiffstyp 1
+            Form1.M_Auftrag.Lines.Add(AnsiToUTF8(' '));
+            Form1.M_Auftrag.Lines.Add(AnsiToUTF8('Code =  '+A6_Code[A6_Next]));
+            inc(A6_Next);
+          end else begin
+            Form1.M_Auftrag.Lines.Add(AnsiToUTF8(' '));
+            Form1.M_Auftrag.Lines.Add(AnsiToUTF8('Code =  '+B6_Code[B6_Next]));
+            inc(B6_Next);
+          end;
+      end;
+      7: begin                                                                  // Sektor 7
+          if (schiff.typ = '1') then begin                                      //? Schiffstyp 1
+            Form1.M_Auftrag.Lines.Add(AnsiToUTF8(' '));
+            Form1.M_Auftrag.Lines.Add(AnsiToUTF8('Code =  '+A7_Code[A7_Next]));
+            inc(A7_Next);
+          end else begin
+            Form1.M_Auftrag.Lines.Add(AnsiToUTF8(' '));
+            Form1.M_Auftrag.Lines.Add(AnsiToUTF8('Code =  '+B7_Code[B7_Next]));
+            inc(B7_Next);
+          end;
+      end;
+      end;
+      UseSchreiben;
+    end else begin                                                                //N Datensatz gewählt
+      if W_Aktiv = 1 then begin                                                   //? Kein Datensatz links ?
+        Form1.L_Links.Caption:=' ';                                               //  Pfeil löschen
+      end else begin
+        Form1.L_Links.Caption:='<';                                               //  Pfeil setzen
+      end;
+      if W_Aktiv >= W_Max then begin                                              //? Kein Datensatz rechts ?
+        Form1.L_Rechts.Caption:=' ';                                              //  Pfeil löschen
+      end else begin
+        Form1.L_Rechts.Caption:='>';                                              //  Pfeil setzen
+      end;
+    end;                                                                          //E if: Datensatz gewählt
+  end;
+  CodeAnz:=erg;
+end;
+function datle : byte;                      {  Daten aus Datei lesen }
+var
+  egstr : string;
+  erg : byte;                               { Ergebnis: 1 = OK; ff = Fehler }
+begin
+  erg:=1;                                   {  Noch kein Fehler }
+  assign(einf,ServerPath+'\Dat_'+inttostr(Schiff.Nr)+'.txt'); {  Handelsdatei lesen }
+  {$I-}
+  reset(einf);                              {  Auftragsdatei ”ffnen }
+  {$I+}
+  if IOResult = 0 then begin                {? Datei vorhanden }
+    readln(einf,egstr);                     {  Zeile 1 lesen }
+    if (egstr = 'Captain') then begin       {? Captain }
+      readln(einf,Schiff.Captain);          {  lesen }
+    end else begin                          {N Captain}
+      erg:=$ff;                             {  Fehler setzen }
+    end;                                    {E if: Captain }
+    readln(einf,egstr);                     {  Zeile esen }
+    if (egstr = 'Raumschiff') then begin    {? Raumschiff }
+      readln(einf,Schiff.Typ);              {  lesen }
+    end else begin                          {N Raumschiff }
+      erg:=$ff;                             {  Fehler setzen }
+    end;                                    {E if: Raumschiff }
+    readln(einf,egstr);                     {  Zeile esen }
+    if (egstr = 'Guthaben') then begin      {? Guthaben }
+      readln(einf,Schiff.Guthaben);         {  lesen }
+    end else begin                          {N Guthaben}
+      erg:=$ff;                             {  Fehler setzen }
+    end;                                    {E if: Guthaben }
+    readln(einf,egstr);                     {  Zeile esen }
+    if (egstr = 'Legaler Auftrag') then begin    {? legaler Auftrag }
+      readln(einf,Schiff.Legal);            {  lesen }
+    end else begin                          {N legaler Auftrag}
+      erg:=$ff;                             {  Fehler setzen }
+    end;                                    {E if: legaler Auftrag }
+    readln(einf,egstr);                     {  Zeile esen }
+    if (egstr = 'Geladen?') then begin      {? Was geladen ? }
+      readln(einf,Schiff.LadLegal);         {  lesen }
+    end else begin                          {N Guthaben}
+      erg:=$ff;                             {  Fehler setzen }
+    end;                                    {E if: Guthaben }
+    readln(einf,egstr);                     {  Zeile esen }
+    if (egstr = 'Illegaler Auftrag') then begin    {? ilegaler Auftrag }
+      readln(einf,Schiff.Illegal);          {  lesen }
+    end else begin                          {N ilegaler Auftrag}
+      erg:=$ff;                             {  Fehler setzen }
+    end;                                    {E if: ilegaler Auftrag }
+    readln(einf,egstr);                     {  Zeile esen }
+    if (egstr = 'Geladen?') then begin      {? Was geladen ? }
+      readln(einf,Schiff.LadIlleg);         {  lesen }
+    end else begin                          {N Guthaben}
+      erg:=$ff;                             {  Fehler setzen }
+    end;                                    {E if: Guthaben }
+    close(einf);                            {  Datei schlieáen }
+  end else begin                            {N Datei vorhanden }
+      erg:=$ff;                             {  Fehler setzen }
+  end;                                      {E if: Datei vorhanden }
+  datle:=erg;
+end;
+//******************************************************************************
+procedure Bs_Update;
+begin
+  Form1.Image1.Picture.LoadFromFile(ServerPath+'\sektor0.bmp');
+  Form1.L_Sektor.Caption:='Codeausgabe';
+  Form1.Image1.Left:=0;
+  Form1.Image1.Top:=0;
+  if (Form1.Image1.Width > Form1.ClientWidth) then begin
+    Form1.Image1.Width:=Form1.ClientWidth;
+  end;
+  if (Form1.Image1.Height > Form1.ClientHeight) then begin
+    Form1.Image1.Height:=Form1.ClientHeight-100;
+  end;
+  if (Form1.ClientHeight > (Form1.Image1.Height + 2)) then begin
+    Form1.Image1.Top:=(Form1.ClientHeight-Form1.Image1.Height) div 2;
+  end;
+  if (Form1.ClientWidth > (Form1.Image1.Width + 2)) then begin
+    Form1.Image1.Left:=(Form1.ClientWidth-Form1.Image1.Width) div 2;
+  end;
+  if (Form1.ClientWidth > (Form1.L_Sektor.Width+2)) then begin
+    Form1.L_Sektor.Left:=(Form1.ClientWidth-Form1.L_Sektor.Width) div 2;
+  end;
+  Form1.M_Info.Top:=Form1.ClientHeight-Form1.M_Info.Height;
+  if (Form1.ClientWidth > (Form1.M_Info.Width+2)) then begin
+    Form1.M_Info.Left:=(Form1.ClientWidth-Form1.M_Info.Width) div 2;
+  end;
+  Form1.M_Anz.Top:=Form1.ClientHeight-Form1.M_Anz.Height;
+  Form1.M_Anz.Left:=760;
+  Form1.P_Schiff.Top:=Form1.L_Sektor.Height+20;
+  if (Form1.ClientWidth > (Form1.P_Schiff.Width+2)) then begin
+    Form1.P_Schiff.Left:=(Form1.ClientWidth-Form1.P_Schiff.Width) div 2;
+  end;
+  Form1.P_Name.Visible:=false;
+  Form1.P_Schiff.Visible:=false;
+  Form1.P_Auftrag.Visible:=false;
+  Form1.P_Auftrag.Top:=255;
+  if (Form1.ClientWidth > (Form1.P_Auftrag.Width+2)) then begin
+    Form1.P_Auftrag.Left:=(Form1.ClientWidth-Form1.P_Auftrag.Width) div 2;
+  end;
+  Form1.P_BeEntl.Visible:=false;
+  Form1.P_BeEntl.Top:=255;
+  if (Form1.ClientWidth > (Form1.P_BeEntl.Width+2)) then begin
+    Form1.P_BeEntl.Left:=(Form1.ClientWidth-Form1.P_BeEntl.Width) div 2;
+  end;
+  Form1.P_Code.Visible:=false;
+  Form1.P_Code.Top:=300;
+  if (Form1.ClientWidth > (Form1.P_Code.Width+2)) then begin
+    Form1.P_Code.Left:=(Form1.ClientWidth-Form1.P_Code.Width) div 2;
+  end;
+  Form1.Width:=800;
+  Form1.Height:=600;
+end;
+//******************************************************************************
+procedure IniLesen;                                                             //  Ini-Datei lesen
+var
+  egstr : string;
+begin
+  ServerPath:='d:\';                                                            //  Pfad zum Server auf Standart
+  assign(einf,ProgrammPath+'CodeAg.ini');                                        //  Dateiname festlegen
+  {$I-}
+  reset(einf);                              {  Auftragsdatei ”ffnen }
+  {$I+}
+  if IOResult = 0 then begin                {? Datei vorhanden }
+    readln(einf,egstr);                     {  Zeile 1 lesen }
+    if (egstr = 'Server') then begin        {? Raumschiff }
+      readln(einf,ServerPath);              {  lesen }
+    end;                                    {E if: Raumschiff }
+    close(einf);                            {  Datei schlieáen }
+  end;                                      {E if: Datei vorhanden }
+end;
+//******************************************************************************
+procedure SchiffAnz;
+begin
+  Form1.M_Schiff1.Clear;
+  Form1.M_Schiff1.Lines.Add(AnsiToUTF8('Captain: '+Schiff.Captain));
+  Form1.M_Schiff1.Lines.Add(AnsiToUTF8(''));
+  Form1.M_Schiff1.Lines.Add(AnsiToUTF8('Raumschiff: Space Car '+Schiff.Typ));
+  Form1.M_Schiff1.Lines.Add(AnsiToUTF8(''));
+  Form1.M_Schiff1.Lines.Add(AnsiToUTF8('Credits: ' + inttostr(Schiff.Guthaben)));
+
+  Form1.M_Schiff2.Clear;
+  Form1.M_Schiff2.Lines.Add(AnsiToUTF8('Legaler Auftrag: ' + inttostr(Schiff.Legal)));
+  Form1.M_Schiff2.Lines.Add(AnsiToUTF8('Geladen: ' +  Schiff.LadLegal));
+  Form1.M_Schiff2.Lines.Add(AnsiToUTF8(''));
+  Form1.M_Schiff2.Lines.Add(AnsiToUTF8('Illegaler Auftrag: ' + inttostr(Schiff.Illegal)));
+  Form1.M_Schiff2.Lines.Add(AnsiToUTF8('Geladen: ' +  Schiff.LadIlleg));
+
+  Form1.P_Schiff.Visible:=true;
+end;
+//******************************************************************************
+procedure PrgPathLesen;
+var  i,j:integer;
+begin
+     i := 0;                                                                    //  Anfang Programmname = 0
+     ProgrammPath := ParamStr(0);                                               //  Pfad der programm EXE ermitteln
+     for j := 1 to length(ProgrammPath) do begin                                //S Für alle Zeichen des Aufrufstrings
+       if ProgrammPath[j] = '\' then begin                                      //? Anfang Dateiname
+          i := j;                                                               //  Position im String merken
+        end;                                                                    //E Anfang Dateiname
+     end;                                                                       //E S.: Für alle Zeichen des Aufrufstrings
+     ProgrammPath := copy(ProgrammPath,1,i);                                    //  Pfad ermitteln
+end;
+//******************************************************************************
+procedure Tastenaw(Key : Word);
+var
+  erg : byte;
+  // $0d = Enter
+  // $25 = Pfeil rechts
+  // $26 = Pfeil auf
+  // $27 = Pfeil links
+  // $28 = Pfeil ab
+  // $70 = F1
+  // $71 = F2
+  // $72 = F3
+  // $73 = F4
+  // $74 = F5
+  // $75 = F6
+  // $76 = F7
+  // $77 = F8
+  // $78 = F9
+  // $79 = F10
+begin
+  case key of                                                                   //> Taste
+    $1b: begin                                                                  //C ESC
+           prgwo:=0;                                                            //  Anfang Programm
+           Bs_Update;                                                           //  Bildschirm-Update
+           Form1.M_Info.Text:=AnsiToUTF8('Bitte identifizieren Sie sich');
+           Form1.M_Info.Lines.Add(AnsiToUTF8('                                 1.. Taste'));
+         end;
+    $0c: begin                                                                  //C ?
+         end;
+    // $25: begin                                                                  //C Pfeil links
+    //     end;
+    // $26: begin                                                                  //C Pfeil auf
+    //     end;
+    // $27: begin                                                                  //C Pfeil rechts
+    //     end;
+    // $28: begin                                                                  //C Pfeil abw.
+    //     end;
+    $70: begin                                                                  //C F1
+         end;
+    $71: begin                                                                  //C F2
+         end;
+    $72: begin                                                                  //C F3
+         end;
+    $73: begin                                                                  //C F4
+         end;
+    $74: begin                                                                  //C F5
+         end;
+    $75: begin                                                                  //C F6
+         end;
+    $76: begin                                                                  //C F7
+         end;
+    $77: begin                                                                  //C F8
+         end;
+    $78: begin                                                                  //C F9
+         end;
+    $79: begin                                                                  //C F10
+         end;
+    else begin
+       bef:=char(key);
+       if (key >= $30) and (key <= $39) then begin                              //? Nummer
+         rfid:=rfid+bef;
+         if (length(rfid) > 10) then begin
+           rfid:=copy(rfid,2,11);
+         end;
+       end else begin                                                         //N Nummer
+         if (key >= 13) and (key <= ord('z'))  then begin                     //? Tastertureingabe
+           case prgwo of                                                      //> Ablauf
+           $00: begin                                                         //C Datei lesen
+                  form1.m_Anz.Text:=AnsiToUTF8('');                           //  Memo löschen
+                  form1.M_Anz.SetFocus;                                       //  Tasteneingaben hierher
+                  if (length(rfid) = 10) then begin
+                    erg:=1;
+                    Schiff.Nr:=StrToInt(rfid);
+                    rfid:='';                                                 //  Neuer Chip notwendig
+                  end else begin
+                    erg:=0;
+                  end;
+                  if (erg = 1) then begin                                     //? OK
+                    erg:=datle;                                               //  Serverdatei lesen
+                    if (erg = 1) then begin                                     //? OK
+                      Schiffanz;                                              //  Schiff anzeigen
+                      if (Schiff.Legal>0) or (Schiff.Illegal>0) then begin    //? Auftrag vorhanden
+
+                      end else begin                                          //N Auftrag vorhanden
+                        erg:=CodeAnz(true);                                //  Aufträge anzeigen
+                        prgwo:=$10;                                         //  Auftrag wählen
+                      end;
+                    end else begin                                              //N OK
+                      ;
+                    end;                                                        //E if: ok
+                  end;                                                        //E if: OK
+                end;
+           $10: begin                                                         //C Legalen Auftrag suchen
+                  erg:=CodeAnz(false);
+                  if (erg > 0) then begin                                     //? Auftrag gewählt
+                    prgwo:=$11;                                                            //  Anfang Programm
+                    Form1.M_Info.Text:=AnsiToUTF8('... Taste');
+                  end;
+                end;
+           $11: begin                                                          //C Anzeige löschen
+                  if key = 13 then begin
+                    prgwo:=0;                                                            //  Anfang Programm
+                    Bs_Update;                                                           //  Bildschirm-Update
+                    Form1.M_Info.Text:=AnsiToUTF8('Bitte identifizieren Sie sich');
+                  end;
+                end;
+           else begin
+                  prgwo:=0;
+                  Bs_Update;                                                           //  Bildschirm-Update
+                  Form1.M_Info.Text:=AnsiToUTF8('Bitte identifizieren Sie sich');
+                end;
+           end;                                                                 //E case prgwo
+         end;                                                                   //E if: Tastertureingabe
+         rfid:='';                                                              //  Neuer Chip notwendig
+       end;                                                                     //E Nummer
+     end;                                                                       //E case: Taste, else
+  end;                                                                          //E case: Taste
+end;                                                                            //E procedure
+//******************************************************************************
+function OLActiveCaption:string;
+var
+   Handle:THandle;
+   Len:LongInt;
+   Title:string;
+begin
+   Handle:=GetForegroundWindow;
+   Len:=GetWindowTextLength(Handle) + 1;
+   SetLength(Title,Len);
+   GetWindowText(Handle,PChar(Title),Len);
+   OLActiveCaption:=TrimRight(Title);
+end;
+//******************************************************************************
+procedure TForm1.FormCreate(Sender: TObject);
+var
+  h: THandle;
+begin
+  keypreview:=true;
+  h := GetSystemMenu(Handle, False);
+  if h <> 0 then
+  begin
+    DeleteMenu(h, SC_CLOSE, MF_BYCOMMAND);
+    DrawMenuBar(Handle);
+  end;
+  W_Aktiv:=1;                                                                   //  Wir beginnen mit Auftrag 1
+  W_Max:=3;                                                                     //  4 Aufträge zur Auswahl
+  PrgPathLesen;                                                                 //  Startpfad lesen
+  IniLesen;                                                                     //  Ini-File lesen
+  CodeLesen;
+  UseLesen;
+  Bs_Update;                                                                    //  Bildschirm-Update
+end;
+
+procedure TForm1.Button1Click(Sender: TObject);
+begin
+  Application.MessageBox('Netzwerkfehler','',0);
+end;
+
+procedure TForm1.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  Tastenaw(Key);                                                                     //  Tasten auswerten
+end;
+
+procedure TForm1.P_BeEntlClick(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.Timer1Timer(Sender: TObject);
+begin
+  random(10000);
+end;
+
+end.

@@ -1,0 +1,14 @@
+Captain
+lea
+Raumschiff
+2
+Guthaben
+2085588
+Legaler Auftrag
+64
+Geladen?
+ja
+Illegaler Auftrag
+0
+Geladen?
+nein

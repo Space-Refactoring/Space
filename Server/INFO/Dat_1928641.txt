@@ -1,0 +1,14 @@
+Captain
+Luisa Ehrhardt
+Raumschiff
+2
+Guthaben
+2758185
+Legaler Auftrag
+0
+Geladen?
+nein
+Illegaler Auftrag
+0
+Geladen?
+nein

@@ -1,0 +1,14 @@
+Captain
+Mayonnaise
+Raumschiff
+1
+Guthaben
+110256
+Legaler Auftrag
+0
+Geladen?
+nein
+Illegaler Auftrag
+0
+Geladen?
+nein

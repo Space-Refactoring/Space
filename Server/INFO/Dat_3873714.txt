@@ -1,0 +1,14 @@
+Captain
+Jäger robin
+Raumschiff
+2
+Guthaben
+1105940
+Legaler Auftrag
+0
+Geladen?
+nein
+Illegaler Auftrag
+199
+Geladen?
+ja

@@ -1,0 +1,14 @@
+Captain
+d2
+Raumschiff
+1
+Guthaben
+100000
+Legaler Auftrag
+746
+Geladen?
+ja
+Illegaler Auftrag
+0
+Geladen?
+nein

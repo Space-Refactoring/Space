@@ -1,0 +1,14 @@
+Captain
+Lord Louis
+Raumschiff
+1
+Guthaben
+215063
+Legaler Auftrag
+0
+Geladen?
+nein
+Illegaler Auftrag
+0
+Geladen?
+nein

@@ -1,0 +1,14 @@
+Captain
+0001809211
+Raumschiff
+2
+Guthaben
+2004678
+Legaler Auftrag
+0
+Geladen?
+nein
+Illegaler Auftrag
+181
+Geladen?
+nein

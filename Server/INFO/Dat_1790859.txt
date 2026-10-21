@@ -1,0 +1,14 @@
+Captain
+Lisa
+Raumschiff
+2
+Guthaben
+3546601
+Legaler Auftrag
+395
+Geladen?
+ja
+Illegaler Auftrag
+0
+Geladen?
+nein
