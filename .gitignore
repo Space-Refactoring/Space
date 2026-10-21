@@ -1,0 +1,65 @@
+# ============================
+# OS JUNK
+# ============================
+.DS_Store
+Thumbs.db
+
+# ============================
+# IDE / EDITOR FILES
+# ============================
+# Lazarus / FreePascal
+backup/
+lib/
+units/
+*.lps
+*.lpk
+*.ppu
+*.o
+*.or
+*.rst
+*.compiled
+
+# Delphi
+__history/
+__recovery/
+*.dproj.local
+*.identcache
+*.local
+*.stat
+*.dcu
+*.dcp
+*.dcpil
+*.bpl
+*.bpi
+*.drc
+*.map
+*.tvsconfig
+*.tvsconfig_backup
+
+# ============================
+# BUILD OUTPUT
+# ============================
+bin/
+build/
+out/
+*.exe
+*.dll
+*.so
+*.a
+*.app
+*.res
+*.rsm
+
+# ============================
+# LOGS / TEMP
+# ============================
+*.log
+*.tmp
+*.bak
+
+# ============================
+# ENVIRONMENT / SECRETS
+# ============================
+.env
+.env.local
+

@@ -1,0 +1,50 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+        "label": "Space: Build",
+        "type": "shell",
+        "command": "docker-compose",
+        "args": [
+            "run",
+            "--rm",
+            "compiler"
+        ],
+        "group": {
+            "kind": "build",
+            "isDefault": true
+        },
+        "problemMatcher": []
+    },
+    {
+        "label": "Space: App starten",
+        "type": "shell",
+        "command": "docker-compose",
+        "args": [
+            "run",
+            "--rm",
+            "runner"
+        ],
+        "group": {
+            "kind": "none",
+            "isDefault": true
+        },
+        "problemMatcher": []
+    },
+    {
+        "label": "Space: Bauen und App starten",
+        "type": "shell",
+        "command": "docker-compose",
+        "args": [
+            "run",
+            "--rm",
+            "runner"
+        ],
+        "group": {
+            "kind": "none"
+        },
+        "dependsOn": "Space: Build",
+        "problemMatcher": []
+    }
+]
+}
