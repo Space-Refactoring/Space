@@ -12,7 +12,6 @@ backup/
 lib/
 units/
 *.lps
-*.lpi
 *.lpk
 *.ppu
 *.o
