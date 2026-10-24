@@ -1,0 +1,25 @@
+services:
+  compiler:
+    build:
+      context: .
+      dockerfile: Docker/compile.Dockerfile
+    volumes:
+      - .:/app
+    command: >
+      lazbuild
+      --build-all
+      --os=win32
+      --cpu=i386
+      --ws=win32
+      --lazarusdir=/usr/lib/lazarus
+      space.lpr
+
+  runner:
+    build:
+      context: .
+      dockerfile: Docker/run.Dockerfile
+    volumes:
+      - .:/app
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    environment:
+      - DISPLAY=${DISPLAY}
