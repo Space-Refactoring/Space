@@ -1,6 +1,6 @@
 # Space
 
-Space ist ein Spiel, bei dem man mit einer Gruppe einen Wettkampf darum macht, wer am meisten (virtuelles) Geld als Weltraumpirat erwirtschaften kann. Dabei ist es entscheidend welche Aufträge man annimmt, ob man sich traut illegale Aufträge anzunehmen (aber Achtung vor der Welraumpolizei!) und manchmal auch wer am schnellsten rennt. 
+Space ist ein Spiel, bei dem man mit einer Gruppe einen Wettkampf darum macht, wer am meisten (virtuelles) Geld als Weltraumpirat erwirtschaften kann. Dabei ist es entscheidend welche Aufträge man annimmt, ob man sich traut illegale Aufträge anzunehmen (aber Achtung vor der Weltraumpolizei!) und manchmal auch wer am schnellsten rennt. 
 
 ## Description
 
@@ -10,11 +10,11 @@ Das Spiel wird mithilfe von NFC-Chips (Raumschiffen) gespielt. Ein Spieler geht 
 
 ![Auftragsauswahl](img/space_auftragauswahl.png)
 
-Ein Spieler kann auch Illegale Auträge annehmen. Dafür braucht er zuerst einen Code, der via physischer List vorhanden ist. Sobald ein Spieler einen Code erlangt hat, kann er damit zu einem Illegalen Sektor und dort Eintritt erlangen. 
+Ein Spieler kann auch illegale Aufträge annehmen. Dafür braucht er zuerst einen Code, der via physischer Liste vorhanden ist. Sobald ein Spieler einen Code erlangt hat, kann er damit zu einem illegalen Sektor und dort Eintritt erlangen. 
 
 ![Illegaler Auftrag](img/space_illegal.png)
 
-Nur sollte man gefasst sein, wenn man Illegale Fracht geladen hat, denn die Polizei ist einem schon auf den Fersen!
+Nur sollte man gefasst sein, wenn man illegale Fracht geladen hat, denn die Polizei ist einem schon auf den Fersen!
 
 Wenn man nach einiger Zeit genug Geld gesammelt hat, dann kann man sein Raumschiff auch aufwerten um noch schneller Geld zu verdienen. 
 
@@ -28,13 +28,13 @@ Wenn man nach einiger Zeit genug Geld gesammelt hat, dann kann man sein Raumschi
 - Illegale Aufträge: Höhere Verdienste in den Schwarzmarkt-Sektoren (mit Risiko)
 - Polizei-Kontrollen: Mobile Polizisten können dich überprüfen und illegale Fracht konfiszieren
 - Kinderleichte Bedienung: NFC-Chip scannen an jedem Sektor für schnelle Transaktionen
-- Wettbewerb: Nach einer bestimmten Zeit gewinnnt der Spieler mit dem meisten Geld
+- Wettbewerb: Nach einer bestimmten Zeit gewinnt der Spieler mit dem meisten Geld
 
 ## Usage
 
 Um das Projekt lauffähig zu machen schaut euch bitte [hier](Docker/README.md) um. Dafür solltet ihr Docker installiert haben. 
 
-Um ein komplettes Spiel aufzusetzen braucht ihr 8(+1 Laptop) Clients inkl. Bildschirm, Tastatur und simplen NFC-Karten leser. Diese müssen in einem Netzwerk miteinander verbunden sein. Hier die Topologie: 
+Um ein komplettes Spiel aufzusetzen braucht ihr 8(+1 Laptop) Clients inkl. Bildschirm, Tastatur und simplen NFC-Kartenleser. Diese müssen in einem Netzwerk miteinander verbunden sein. Hier die Topologie: 
 
 ```mermaid
 graph TB
@@ -70,9 +70,9 @@ graph TB
 
 - Für Probleme beim Ausführen des Projekts wendet euch bitte an die DevOps. 
 - Für Hindernisse in der Zusammenarbeit und dem Entwicklungsablauf wendet euch an den Scrum Master. 
-- Für Fragen zum Produkt oder wiedersprechliche Anforderungen wendet auch dan den Product Owner.
+- Für Fragen zum Produkt oder widersprüchliche Anforderungen wendet auch an den Product Owner.
 
 
 ## License
 
-Dieses Projekt fällt unter die [MIT Lizenz](LICENSE), damit wir damit Arbeiten können. Danke an Detlef für die letzen 20 Jahre entwicklungsarbeit! Und vergesst nicht Detlef zu erwähnen, falls ihr das Projekt in einem anderen Rahmen benutzt. 
+Dieses Projekt fällt unter die [MIT Lizenz](LICENSE), damit wir damit Arbeiten können. Danke an Detlef für die letzten 20 Jahre Entwicklungsarbeit! Und vergesst nicht Detlef zu erwähnen, falls ihr das Projekt in einem anderen Rahmen benutzt. 
