@@ -72,6 +72,12 @@ graph TB
 - Für Hindernisse in der Zusammenarbeit und dem Entwicklungsablauf wendet euch an den Scrum Master. 
 - Für Fragen zum Produkt oder widersprüchliche Anforderungen wendet auch an den Product Owner.
 
+## Git
+
+Für alle, die sich noch nicht mit Git auskennen: [learn git](https://git-scm.de/learn)
+
+Oder etwas spielerischer: [learn git branching](https://learngitbranching.js.org)
+
 
 ## License
 
