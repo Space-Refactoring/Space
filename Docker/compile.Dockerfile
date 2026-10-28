@@ -6,7 +6,8 @@ ARG CCOMPILER=ppcross386
 
 WORKDIR /app
 
-RUN pacman -Syu --noconfirm && \
+RUN echo "DisableSandboxSyscalls" >> /etc/pacman.conf && \
+    pacman -Syu --noconfirm && \
     pacman -S --needed --noconfirm \
         fpc fpc-src lazarus \
         make gcc mingw-w64-gcc && \
