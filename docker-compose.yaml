@@ -19,7 +19,6 @@ services:
   runner:
     build:
       dockerfile: Docker/run.Dockerfile
-    platform: linux/arm64
     volumes:
       - .:/app
       - /tmp/.X11-unix:/tmp/.X11-unix
