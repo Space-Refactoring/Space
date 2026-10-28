@@ -2,6 +2,9 @@ services:
   compiler:
     build:
       dockerfile: Docker/compile.Dockerfile
+    platform: linux/amd64
+    security_opt:
+      - seccomp:unconfined
     volumes:
       - .:/app
     command: >
@@ -16,6 +19,7 @@ services:
   runner:
     build:
       dockerfile: Docker/run.Dockerfile
+    platform: linux/arm64
     volumes:
       - .:/app
       - /tmp/.X11-unix:/tmp/.X11-unix
