@@ -3,8 +3,6 @@ services:
     build:
       dockerfile: Docker/compile.Dockerfile
     platform: linux/amd64
-    security_opt:
-      - seccomp:unconfined
     volumes:
       - .:/app
     command: >
