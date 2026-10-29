@@ -1,0 +1,17 @@
+name: PR Compile Check
+
+on:
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  compile-pascal:
+    name: Compile Project
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run compilation container
+        run: docker compose run --rm compiler
