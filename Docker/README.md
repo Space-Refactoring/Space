@@ -33,7 +33,7 @@ Wer keine Lust hat, das ganze Pascal-Zeug lokal zu installieren, kann einfach Do
 Beim ersten Ausführen wird das Docker-Image gebaut (keine Sorge, das dauert nur einmalig ein paar Minuten). Anschließend wird das Projekt automatisch kompiliert:
 
 ```shell
-    docker-compose run --rm compiler
+    docker compose run --rm compiler
 ```
 
 Danach sollten die space.exe und weitere lustige Dateien im Verzeichnis auftauchen.
@@ -43,7 +43,7 @@ Danach sollten die space.exe und weitere lustige Dateien im Verzeichnis auftauch
 Um die kompilierte grafische Anwendung direkt im Container zu testen, leiten wir das Display an den X11-Server des Hosts weiter. Der Runner kann wie folgt gestartet werden:
 
 ```shell
-    docker-compose run --rm runner
+    docker compose run --rm runner
 ```
 
 #### Linux
