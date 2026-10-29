@@ -1,0 +1,28 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+    -   id: trailing-whitespace
+    -   id: end-of-file-fixer
+    -   id: check-added-large-files
+    -   id: check-merge-conflict
+
+-   repo: local
+    hooks:
+      - id: ptop
+        name: ptop formatter
+        entry: hooks/ptop-format.sh
+        language: system
+        files: \.(pas|pp|inc|lpr|lpk)$
+        stages: [pre-commit]
+
+-   repo: local
+    hooks:
+      - id: commit-msg-format
+        name: Check commit message format
+        entry: hooks/validate-commit-msg.sh
+        language: script
+        stages: [commit-msg]
+        always_run: true
