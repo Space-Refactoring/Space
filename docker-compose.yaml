@@ -1,7 +1,6 @@
 services:
   compiler:
     build:
-      context: .
       dockerfile: Docker/compile.Dockerfile
     volumes:
       - .:/app
@@ -16,7 +15,6 @@ services:
 
   runner:
     build:
-      context: .
       dockerfile: Docker/run.Dockerfile
     volumes:
       - .:/app
