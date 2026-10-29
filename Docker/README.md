@@ -58,7 +58,7 @@ Hier ist eine Anleitung dazu: https://gist.github.com/roaldnefs/fe9f36b0e8cf2890
  Danach kannst du in den Einstellungen von XQuartz unter "Security" die Option "Allow connections from network clients" aktivieren. Anschließend musst du in deinem Terminal die DISPLAY-Variable setzen:
 
 ```shell
-    export DISPLAY=0
+    export DISPLAY=:0
 ```
 
 Nach dem export Schritt, den localhost zu X11 hinzufügen mit 
