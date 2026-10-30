@@ -7,16 +7,16 @@ FIRST_LINE=$(head -n1 "$MSG_FILE")
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-# Regex Pattern: type(scope)?: subject
-# Enforces allowed types, optional scope, optional ! (breaking change), and lowercase start
-PATTERN="^(feat|fix|build|chore|ci|docs|style|refactor|perf|test)(\([a-zA-Z0-9_-]+\))?!?: [a-z].*$"
+# Regex Pattern: [TAG:scope]!? subject
+PATTERN="^\[(FEAT|FIX|BUILD|CHORE|CI|DOCS|STYLE|REFACTOR|PERF|TEST)(:[a-zA-Z0-9_-]+)?\]!? [a-z].*$"
 
 # 1. Check format and valid type
 if [[ ! $FIRST_LINE =~ $PATTERN ]]; then
     echo -e "${RED}Error: Invalid commit format.${NC}"
-    echo "Expected: type(scope): subject"
-    echo "Valid types: feat, fix, build, chore, ci, docs, style, refactor, perf, test"
-    echo "Example: feat(auth): add login button"
+    echo "Expected: [TAG:scope] subject  OR  [TAG] subject"
+    echo "Valid TAGs: FEAT, FIX, BUILD, CHORE, CI, DOCS, STYLE, REFACTOR, PERF, TEST"
+    echo "Example: [FEAT:ui] add cash transaction feature"
+    echo "Example (Breaking): [BUILD:docker]! deprecate win32 support"
     exit 1
 fi
 
