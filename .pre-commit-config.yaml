@@ -11,11 +11,11 @@ repos:
 
 -   repo: local
     hooks:
-      - id: ptop
-        name: ptop formatter
-        entry: hooks/ptop-format.sh
+      - id: jedi
+        name: Jedi code formatter for pascal
+        entry: hooks/jedi-format.sh
         language: system
-        files: \.(pas|pp|inc|lpr|lpk)$
+        files: \.(pas|pp|lpr|dpr)$
         stages: [pre-commit]
 
 -   repo: local

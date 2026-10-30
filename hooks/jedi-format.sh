@@ -2,7 +2,7 @@
 set -eu
 
 repo_root=$(git rev-parse --show-toplevel)
-config="$repo_root/ptop.cfg"
+config="$repo_root/pascal-format.cfg"
 
 for file do
   case "$file" in
@@ -10,9 +10,9 @@ for file do
     *) file="$repo_root/$file" ;;
   esac
 
-  tmp="${file}.ptop-tmp"
+  tmp="${file}.fmt-tmp"
 
-  if ! ptop -c -i 2 "$config" "$file" "$tmp"; then
+  if ! ./pascal-format -config="$config" "$file" "$tmp"; then
     rm -f "$tmp"
     exit 1
   fi
