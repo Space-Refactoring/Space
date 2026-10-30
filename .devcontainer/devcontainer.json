@@ -1,0 +1,26 @@
+{
+	"name": "Pascal Development",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"alefragnani.pascal",
+				"alefragnani.pascal-formatter",
+				"mhutchie.git-graph"
+			],
+			"settings": {
+                "pascal.formatter.engine": "jcf-quadroid",
+                "pascal.formatter.engineParameters": "/workspaces/${localWorkspaceFolderBasename}/.github/config/pascal-format.cfg",
+                "pascal.formatter.enginePath": "/usr/local/bin/jcf",
+				"[pascal]": {
+					"editor.defaultFormatter": "alefragnani.pascal-formatter",
+					"editor.formatOnSave": true
+				}
+			}
+		}
+	},
+	"remoteUser": "vscode",
+    "postCreateCommand": "git config --local init.templateDir ~/.git-hooks && pre-commit init-templatedir ~/.git-hooks --hook-type pre-commit --hook-type commit-msg && git config --local core.hooksPath ~/.git-hooks/hooks"
+}
