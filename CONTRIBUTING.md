@@ -5,13 +5,13 @@ Die Einhaltung standardisierter Conventional Commits hilft dabei, die Projekthis
 ## Format
 
 ```shell
-git commit -m  "TAG(SCOPE): MESSAGE"
+git commit -m  "[TAG:scope] subject"
 ```
 
 **Beispiel:**
 
 ```shell
-git commit -m "feat(auth): add new authentication method"
+git commit -m "[FEAT:nfc] add read functionality for space ships"
 ```
 
 ## Was wird committet? (TAG)
@@ -19,16 +19,16 @@ git commit -m "feat(auth): add new authentication method"
 Der Typ beschreibt die Absicht des Commits.
 
 ```txt
-    feat:     Ein neues Feature für den Benutzer oder die Anwendung.
-    fix:      Ein Bugfix für den Benutzer oder die Anwendung.
-    build:    Änderungen, die das Build-System oder externe Abhängigkeiten betreffen.
-    chore:    Routineaufgaben, Wartung oder Tooling-Änderungen, die keine Quellcode- oder Testdateien verändern.
-    ci:       Änderungen an CI/CD-Konfigurationsdateien und Skripten.
-    docs:     Ausschließliche Änderungen an der Dokumentation.
-    style:    Änderungen, die die Bedeutung des Codes nicht beeinflussen (Leerzeichen, Formatierung, fehlende Semikolons usw.).
-    refactor: Eine Codeänderung, die weder einen Fehler behebt noch ein Feature hinzufügt (z. B. Code-Restrukturierung, Umbenennung von Variablen).
-    perf:     Eine Codeänderung, die die Leistung verbessert.
-    test:     Hinzufügen fehlender Tests oder Korrektur bestehender Tests.
+    FEAT:     Ein neues Feature für den Benutzer oder die Anwendung.
+    FIX:      Ein Bugfix für den Benutzer oder die Anwendung.
+    BUILD:    Änderungen, die das Build-System oder externe Abhängigkeiten betreffen.
+    CHORE:    Routineaufgaben, Wartung oder Tooling-Änderungen, die keine Quellcode- oder Testdateien verändern.
+    CI:       Änderungen an CI/CD-Konfigurationsdateien und Skripten.
+    DOCS:     Ausschließliche Änderungen an der Dokumentation.
+    STYLE:    Änderungen, die die Bedeutung des Codes nicht beeinflussen (Leerzeichen, Formatierung, fehlende Semikolons usw.).
+    REFACTOR: Eine Codeänderung, die weder einen Fehler behebt noch ein Feature hinzufügt (z. B. Code-Restrukturierung, Umbenennung von Variablen).
+    PERF:     Eine Codeänderung, die die Leistung verbessert.
+    TEST:     Hinzufügen fehlender Tests oder Korrektur bestehender Tests.
 ```
 
 ## Wo wird committet? (SCOPE)
@@ -37,12 +37,15 @@ Der Scope ist ein optionaler Tag, der den spezifischen Bereich, das Modul oder d
 
 **Beispiel:**
 
-- Architektur-/Modelbasierte: `core`, `auth`, `api`, `ui`, `db`
-- UI & Komponentenbasierte: `button`, `form`, `header`, `footer`, `modal`
-- Datei-/Abhängigkeitsbasierte: `deps`, `readme`, `docker`
+- `sector`
+- `db`
+- `police`
+- `upgrades`
+- `docker`
+- `readme`
 
 > [!NOTE]
-> Wenn ein Commit mehrere Scopes betrifft oder eine globale Änderung ist wird, kann der Scope komplett weggelassen werden (z. B. fix: resolve global memory leak).
+> Wenn ein Commit mehrere Scopes betrifft oder eine globale Änderung ist wird, kann der Scope komplett weggelassen werden (z. B. [CHORE] clean up unused files).
 
 ## Wie wird es beschrieben? (MESSAGE)
 
@@ -54,20 +57,12 @@ Der **Betreff** enthält eine prägnante Beschreibung der Änderung. Um die Hist
 - Keine Großschreibung: Beginne den Betreff mit einem Kleinbuchstaben.
 - Keine Interpunktion: Beende die Betreffzeile nicht mit einem Punkt (.).
 
-## Erweitert: Breaking Changes & Zusätzliche Details
+## Erweitert: Breaking Changes
 
-Wenn ein Commit einen Breaking Change (eine Änderung, die die Abwärtskompatibilität bricht) einführt, füge direkt vor dem Doppelpunkt ein Ausrufezeichen (!) hinzu.
-
-**Beispiel:**
-
-```shell
-git commit -m "feat(auth)!: remove deprecated login method"
-```
-
-Wenn der Commit mehr Erklärung erfordert, kannst du einen erweiterten Textkörper (Body) und eine Fußzeile (Footer) hinzufügen. Über die Kommandozeile geht das durch die Übergabe mehrerer `-m`-Flags oder durch das reine Ausführen von `git commit`, wodurch sich der Texteditor öffnet.
+Wenn ein Commit einen Breaking Change (eine Änderung, die die Abwärtskompatibilität bricht) einführt, wird ein Ausrufezeichen (`!`) direkt hinter die eckige Klammer gesetzt.
 
 **Beispiel:**
 
 ```shell
-git commit -m "fix(core): resolve memory leak in data processing" -m "This commit addresses a critical memory leak issue" -m "Resolves #123, #456"
+git commit -m "[FEAT:server]! remove support for legacy nfc chips"
 ```
