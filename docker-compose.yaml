@@ -3,7 +3,7 @@ services:
     build:
       dockerfile: Docker/compile.Dockerfile
     volumes:
-      - .:/app
+      - ${LOCAL_WORKSPACE_FOLDER:-.}:/app
     command: >
       lazbuild
       --build-all
@@ -17,7 +17,7 @@ services:
     build:
       dockerfile: Docker/run.Dockerfile
     volumes:
-      - .:/app
+      - ${LOCAL_WORKSPACE_FOLDER:-.}:/app
       - /tmp/.X11-unix:/tmp/.X11-unix
     environment:
       - DISPLAY=${DISPLAY}
