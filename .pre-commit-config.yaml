@@ -11,18 +11,18 @@ repos:
 
 -   repo: local
     hooks:
-      - id: jedi
-        name: Jedi code formatter for pascal
-        entry: .github/hooks/jedi-format.sh
-        language: system
-        files: \.(pas|pp|lpr|dpr)$
-        stages: [pre-commit]
-
--   repo: local
-    hooks:
       - id: commit-msg-format
         name: Check commit message format
         entry: .github/hooks/validate-commit-msg.sh
         language: script
         stages: [commit-msg]
         always_run: true
+
+-   repo: local
+    hooks:
+      - id: jedi
+        name: Jedi code formatter for pascal
+        entry: .github/hooks/jedi-format.sh
+        language: system
+        files: \.(pas|pp|lpr|dpr)$
+        stages: [pre-commit]
