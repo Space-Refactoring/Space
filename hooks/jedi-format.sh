@@ -10,9 +10,9 @@ for file do
     *) file="$repo_root/$file" ;;
   esac
 
-  tmp="${file}.fmt-tmp"
+  tmp="${file}.fmt"
 
-  if ! ./pascal-format -config="$config" "$file" "$tmp"; then
+  if ! ./pascal-format -config="$config" -out "$tmp" "$file" ; then
     rm -f "$tmp"
     exit 1
   fi
