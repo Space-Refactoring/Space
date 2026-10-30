@@ -1,26 +1,35 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Commit-Nachricht validieren
-commit_msg=$(cat "$1")
+MSG_FILE=$1
+FIRST_LINE=$(head -n1 "$MSG_FILE")
 
-# Erlaubte Tag_1 (Where) und Tag_2 (What)
-tag1="API|CI|DAT|DEP|DOC|DPLY|ENV|IDE|MOD|OPS|ORG|SEC|TEST"
-tag2="BFX|BREAK|BUG|DEL|DOCS|ENH|FEAT|ICM|PERF|REF|STYLE|TEST"
+# Colors for terminal output
+RED='\033[0;31m'
+NC='\033[0m' # No Color
 
-# Pattern: [CI SKIP] TAG_1:TAG_2 MESSAGE
-pattern="^\[($tag1):($tag2)\] .+"
+# Regex Pattern: type(scope)?: subject
+# Enforces allowed types, optional scope, optional ! (breaking change), and lowercase start
+PATTERN="^(feat|fix|build|chore|ci|docs|style|refactor|perf|test)(\([a-zA-Z0-9_-]+\))?!?: [a-z].*$"
 
-if ! echo "$commit_msg" | grep -qE "$pattern"; then
-  echo ""
-  echo "Ungültiges Commit-Format!"
-  echo ""
-  echo "Expected:  \"[TAG_1:TAG_2] MESSAGE\""
-  echo "Example:   \"[MOD:ENH] Added linear regression to toolstack\""
-  echo ""
-  echo "Tag_1 (Where): API, CI, DAT, DEP, DOC, DPLY, ENV, IDE, MOD, OPS, ORG, SEC, TEST"
-  echo "Tag_2 (What):  BFX, BREAK, BUG, DEL, DOCS, ENH, FEAT, ICM, PERF, REF, STYLE, TEST"
-  echo ""
-  exit 1
+# 1. Check format and valid type
+if [[ ! $FIRST_LINE =~ $PATTERN ]]; then
+    echo -e "${RED}Error: Invalid commit format.${NC}"
+    echo "Expected: type(scope): subject"
+    echo "Valid types: feat, fix, build, chore, ci, docs, style, refactor, perf, test"
+    echo "Example: feat(auth): add login button"
+    exit 1
+fi
+
+# 2. Check length (max 50 characters)
+if [[ ${#FIRST_LINE} -gt 50 ]]; then
+    echo -e "${RED}Error: The subject line is too long (${#FIRST_LINE} characters). Maximum allowed is 50.${NC}"
+    exit 1
+fi
+
+# 3. Forbid period at the end
+if [[ $FIRST_LINE == *\. ]]; then
+    echo -e "${RED}Error: The subject line must not end with a period (.).${NC}"
+    exit 1
 fi
 
 exit 0
