@@ -11,7 +11,6 @@ services:
       --os=win32
       --cpu=i386
       --ws=win32
-      --lazarusdir=/usr/lib/lazarus
       space.lpr Upgrade/upgrade.lpr Polizei/polizei.lpr CodeAg/CodeAg.lpr Auswertung/project1.lpr
 
   runner:
