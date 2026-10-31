@@ -2,7 +2,6 @@ services:
   compiler:
     build:
       dockerfile: Docker/compile.Dockerfile
-    platform: linux/amd64
     volumes:
       - .:/app
     command: >
