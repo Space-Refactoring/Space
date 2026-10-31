@@ -52,8 +52,20 @@ Der Container nutzt die $DISPLAY-Umgebungsvariable. Gegebenenfalls musst du vorh
 
 #### MacOS
 
-Auf MacOS ist die X11-Unterstützung nicht mehr standardmäßig vorhanden. Du musst vorher XQuartz installieren und starten. Danach kannst du in den Einstellungen von XQuartz unter "Security" die Option "Allow connections from network clients" aktivieren. Anschließend musst du in deinem Terminal die DISPLAY-Variable setzen:
+Auf MacOS ist die X11-Unterstützung nicht mehr standardmäßig vorhanden. Du musst vorher XQuartz installieren und starten.
+Hier ist eine Anleitung dazu: https://gist.github.com/roaldnefs/fe9f36b0e8cf2890af14572c083b516c
+
+ Danach kannst du in den Einstellungen von XQuartz unter "Security" die Option "Allow connections from network clients" aktivieren. Anschließend musst du in deinem Terminal die DISPLAY-Variable setzen:
 
 ```shell
-    export DISPLAY=host.docker.internal:0
+    export DISPLAY=:0
+```
+
+Nach dem export Schritt, den localhost zu X11 hinzufügen mit 
+```shell 
+xhost + 127.0.0.1
+```
+Sollte xhost + 127.0.0.1 nicht sagen: 127.0.0.1 being added to access control list
+```shell
+/opt/X11/bin/xhost + 127.0.0.1 benutzen.
 ```
