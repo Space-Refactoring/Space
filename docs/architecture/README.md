@@ -22,23 +22,33 @@ Hier eine kurze Erklärung und Beschreibung der Dateien und wofür sie da sind.
 - space.dof
 - Unit1.ddp
 
+### Aktuelle Architektur
+
+Die aktuelle Architektur beinhaltet 4 unabhängige Programme, welche alle auf die gleiche Datenhaltung zugreifen. Diese Datenhaltung ist ein Netzlaufwerk und die Daten werden in einzelnen Dateien gespeichert. Dadurch entsteht eine große Anfälligkeit für Abstürze oder Dateikorruption wenn gleichzeitig auf dieselbe Datei zugegriffen wird.
+
+![Aktueller Zustand](current_architecture.png)
+
 ## Initiale Vorgehensweise
 
-Das Programm wird erstmal in Bestandteile zerlegt.  
-Jedes einzelne Segment kriegt seinen eigenen Unterordner.  
-Die einzelnen Bestandteile werden später wieder passend zusammengeführt.  
+Das Programm wird erstmal in Module zerlegt.  
+Jedes einzelne Modul kriegt seinen eigenen Unterordner.  
+Die einzelnen Module werden später wieder passend zusammengeführt.  
 
-Die Bestandteile sind:
+Die Module sind:
 
 - Datenhaltung
 - Darstellung
-- Spiellogik
-  - Sektoren
-    - (Il-)Legal
-    - Werft
-  - Events
+- Logik
+  - Client
+    - Sektoren
+        - (Il-)Legal
+    - Events
   - Polizei
   - Auswertung
+  - Upgrade
+
+
+![Modul Architektur](modul_architecture.png)
 
 ## Architekturideen
 
@@ -47,7 +57,7 @@ Allgemein gibt es mehrere Endpunkte, als die eine Anwendung fungieren kann:
 - Sektor
   - Legal
   - Illegal
-  - Werft
+  - Werft (Upgrade)
 - Polizei
 - Datenbank
 

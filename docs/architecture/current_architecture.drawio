@@ -1,0 +1,48 @@
+<mxfile host="65bd71144e">
+    <diagram id="oAZOm0SQLDXeevH8IkPg" name="Page-1">
+        <mxGraphModel dx="1223" dy="946" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="65GA4tOsOBuWhI7tglYz-10" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" value="" vertex="1">
+                    <mxGeometry height="300" width="700" x="90" y="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="65GA4tOsOBuWhI7tglYz-6" edge="1" parent="1" source="65GA4tOsOBuWhI7tglYz-1" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="65GA4tOsOBuWhI7tglYz-5">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="170" y="380"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="65GA4tOsOBuWhI7tglYz-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Client" vertex="1">
+                    <mxGeometry height="60" width="120" x="110" y="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="65GA4tOsOBuWhI7tglYz-7" edge="1" parent="1" source="65GA4tOsOBuWhI7tglYz-2" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" target="65GA4tOsOBuWhI7tglYz-5">
+                    <mxGeometry relative="1" x="0.0474" as="geometry"/>
+                </mxCell>
+                <mxCell id="65GA4tOsOBuWhI7tglYz-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Polizei" vertex="1">
+                    <mxGeometry height="60" width="120" x="290" y="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="65GA4tOsOBuWhI7tglYz-9" edge="1" parent="1" source="65GA4tOsOBuWhI7tglYz-3" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="65GA4tOsOBuWhI7tglYz-5">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="710" y="380"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="65GA4tOsOBuWhI7tglYz-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="Auswertung" vertex="1">
+                    <mxGeometry height="60" width="120" x="650" y="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="65GA4tOsOBuWhI7tglYz-8" edge="1" parent="1" source="65GA4tOsOBuWhI7tglYz-4" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" target="65GA4tOsOBuWhI7tglYz-5">
+                    <mxGeometry relative="1" x="0.0474" as="geometry"/>
+                </mxCell>
+                <mxCell id="65GA4tOsOBuWhI7tglYz-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Upgrade" vertex="1">
+                    <mxGeometry height="60" width="120" x="470" y="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="65GA4tOsOBuWhI7tglYz-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" value="Server" vertex="1">
+                    <mxGeometry height="60" width="120" x="380" y="350" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
