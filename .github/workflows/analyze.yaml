@@ -1,0 +1,85 @@
+name: Analyze Code Quality
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  analyze:
+    name: Analyze Code Quality
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prepare Delphi Stubs
+        run: |
+          mkdir -p .sonar_stub/source/rtl/sys
+          
+          cat << 'EOF' > .sonar_stub/source/rtl/sys/System.pas
+          unit System;
+          interface
+          type
+            TObject = class
+              constructor Create;
+              procedure Free;
+            end;
+            
+            IInterface = interface end;
+            
+            TVarRec = record
+              VType: Integer;
+            end;
+            
+            TClassHelperBase = class end;
+            
+            TGUID = record
+              D1: LongWord;
+              D2: Word;
+              D3: Word;
+              D4: array[0..7] of Byte;
+            end;
+            
+            TDateTime = Double;
+            
+          implementation
+            constructor TObject.Create; begin end;
+            procedure TObject.Free; begin end;
+          end.
+          EOF
+          cp .sonar_stub/source/rtl/sys/System.pas .sonar_stub/source/rtl/sys/system.pas
+          
+          cat << 'EOF' > .sonar_stub/source/rtl/sys/SysInit.pas
+          unit SysInit;
+          interface
+          implementation
+          end.
+          EOF
+          cp .sonar_stub/source/rtl/sys/SysInit.pas .sonar_stub/source/rtl/sys/sysinit.pas
+          
+          cat << 'EOF' > .sonar_stub/source/rtl/sys/SysUtils.pas
+          unit SysUtils;
+          interface
+          implementation
+          end.
+          EOF
+          cp .sonar_stub/source/rtl/sys/SysUtils.pas .sonar_stub/source/rtl/sys/sysutils.pas
+
+      - uses: SonarSource/sonarqube-scan-action@v8
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        with:
+          args: >
+            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
+            -Dsonar.delphi.installationPath=.sonar_stub
+
+      - uses: SonarSource/sonarqube-quality-gate-action@v1
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
