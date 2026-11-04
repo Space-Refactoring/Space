@@ -59,7 +59,7 @@ Allgemein gibt es mehrere Endpunkte, als die eine Anwendung fungieren kann:
   - Illegal
   - Werft (Upgrade)
 - Polizei
-- Datenbank
+- Auswertung
 
 Es muss festgelegt werden, als welcher eine ausgeführte Anwendung fungiert und auf welchen Datenendpunkt alle am Ende zugreifen.
 
@@ -72,3 +72,8 @@ Beim Aufsetzen des Spiels kann man auswählen, welche Funktion die aktuelle Anwe
 
 Jeder Endpunkt wird in ein eigenes Programm kompiliert.  
 Je nach gewollten Nutzen wird das entsprechende Programm auf einem Gerät ausgeführt.
+
+
+## Architekturziel
+
+Es wurde sich für das erhalten der einzelnen Programme entschieden. Zur Diskussion stehen hierbei noch die mögliche Integration des Upgrades in das Client Programm, da es sich hierbei um einen Spielinhalt handelt.
