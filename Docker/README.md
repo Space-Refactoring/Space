@@ -69,14 +69,14 @@ xhost + 127.0.0.1
 
 Sollte xhost + 127.0.0.1 nicht sagen: 127.0.0.1 being added to access control list
 ```shell
-/opt/X11/bin/xhost + 127.0.0.1 benutzen.
+/opt/X11/bin/xhost + 127.0.0.1
 ```
+benutzen.
+
+
 Zuletzt DISPLAY auf host.docker.internal:0 setzen und XQuartz neu starten:
 ```shell
 export DISPLAY=host.docker.internal:0
 ```
 
-Nach dem export Schritt, den localhost zu X11 hinzufügen mit 
-```shell 
-xhost + 127.0.0.1
-```
+Diese vier Schritte müssen nach einem Neustart des Terminals eventuell wiederholt werden. 
