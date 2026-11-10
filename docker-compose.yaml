@@ -5,7 +5,13 @@ services:
       platform: linux/amd64
       volumes:
         - .:/app
-      command: bash -c 'LAZ_DIR=$$(dirname $$(find /usr/lib/lazarus -name lcl -type d | head -n 1)) && lazbuild --build-all --os=win32 --cpu=i386 --ws=win32 --lazarusdir=$$LAZ_DIR space.lpr Upgrade/upgrade.lpr Polizei/polizei.lpr CodeAg/CodeAg.lpr Auswertung/project1.lpr'
+      command: >
+            lazbuild
+            --build-all
+            --os=win32
+            --cpu=i386
+            --ws=win32
+            space.lpr Upgrade/upgrade.lpr Polizei/polizei.lpr CodeAg/CodeAg.lpr Auswertung/project1.lpr
 
   runner:
     build:
