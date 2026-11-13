@@ -4,8 +4,9 @@
     {
         "label": "Space: Build",
         "type": "shell",
-        "command": "docker-compose",
+        "command": "docker",
         "args": [
+            "compose",
             "run",
             "--rm",
             "compiler"
@@ -19,8 +20,9 @@
     {
         "label": "Space: App starten",
         "type": "shell",
-        "command": "docker-compose",
+        "command": "docker",
         "args": [
+            "compose",
             "run",
             "--rm",
             "runner"
@@ -34,8 +36,9 @@
     {
         "label": "Space: Bauen und App starten",
         "type": "shell",
-        "command": "docker-compose",
+        "command": "docker",
         "args": [
+            "compose",
             "run",
             "--rm",
             "runner"
