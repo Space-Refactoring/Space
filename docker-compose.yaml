@@ -1,23 +1,23 @@
 services:
   compiler:
-      build:
-        dockerfile: Docker/compile.Dockerfile
-      platform: linux/amd64
-      volumes:
-        - .:/app
-      command: >
-            lazbuild
-            --build-all
-            --os=win32
-            --cpu=i386
-            --ws=win32
-            space.lpr Upgrade/upgrade.lpr Polizei/polizei.lpr CodeAg/CodeAg.lpr Auswertung/project1.lpr
+    build:
+      dockerfile: Docker/compile.Dockerfile
+    platform: linux/amd64
+    volumes:
+      - ${LOCAL_WORKSPACE_FOLDER:-.}:/app
+    command: >
+      lazbuild
+      --build-all
+      --os=win32
+      --cpu=i386
+      --ws=win32
+      space.lpr Upgrade/upgrade.lpr Polizei/polizei.lpr CodeAg/CodeAg.lpr Auswertung/project1.lpr
 
   runner:
     build:
       dockerfile: Docker/run.Dockerfile
     volumes:
-      - .:/app
+      - ${LOCAL_WORKSPACE_FOLDER:-.}:/app
       - /tmp/.X11-unix:/tmp/.X11-unix
     environment:
       - DISPLAY=${DISPLAY}
