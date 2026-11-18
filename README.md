@@ -72,13 +72,6 @@ graph TB
 - Für Hindernisse in der Zusammenarbeit und dem Entwicklungsablauf wendet euch an den Scrum Master. 
 - Für Fragen zum Produkt oder widersprüchliche Anforderungen wendet auch an den Product Owner.
 
-## Git
-
-Für alle, die sich noch nicht mit Git auskennen: [learn git](https://git-scm.de/learn)
-
-Oder etwas spielerischer: [learn git branching](https://learngitbranching.js.org)
-
-
 ## License
 
 Dieses Projekt fällt unter die [MIT Lizenz](LICENSE), damit wir damit Arbeiten können. Danke an Detlef für die letzten 20 Jahre Entwicklungsarbeit! Und vergesst nicht Detlef zu erwähnen, falls ihr das Projekt in einem anderen Rahmen benutzt. 
