@@ -5,7 +5,7 @@ unit TestHelloWorld;
 interface
 
 uses
-  Classes, SysUtils, fpcunit, testregistry;
+  Classes, fpcunit, testregistry;
 
 type
   TTestHelloWorld = class(TTestCase)
