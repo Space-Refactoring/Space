@@ -12,8 +12,6 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* && \
     groupadd --system --gid ${GID} appgroup && \
     useradd --system --uid ${UID} --gid appgroup --home-dir /app --shell /usr/sbin/nologin appuser
-    mkdir -p /app/build && \
-    chown -R appuser:appgroup /app
 
 USER appuser:appgroup
 
