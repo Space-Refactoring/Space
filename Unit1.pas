@@ -38,6 +38,7 @@ type
     { Private-Deklarationen }
   public
     { Public-Deklarationen }
+    procedure AfterConstruction; override;
   end;
 
 var
@@ -929,6 +930,8 @@ end;
 //******************************************************************************
 procedure Bs_Update;
 begin
+  Form1.Width:=800;
+  Form1.Height:=600;
   case Sektor of                                                                //> Sektor
   0: begin
        Form1.Image1.Picture.LoadFromFile(ServerPath+'\sektor0.bmp');
@@ -1007,8 +1010,6 @@ begin
   if (Form1.ClientWidth > (Form1.P_Code.Width+2)) then begin
     Form1.P_Code.Left:=(Form1.ClientWidth-Form1.P_Code.Width) div 2;
   end;
-  Form1.Width:=800;
-  Form1.Height:=600;
 end;
 //******************************************************************************
 procedure IniLesen;                                                             //  Ini-Datei lesen
@@ -1836,7 +1837,14 @@ begin
   AuftrLesen;
   EreignLesen;
   UseLesen;                                                                     //  Benutzte Codes lesen
-  Bs_Update;                                                                    //  Bildschirm-Update
+end;
+
+procedure TForm1.AfterConstruction;
+begin
+  inherited AfterConstruction;
+  Bs_Update;
+  M_Info.Text:=AnsiToUTF8('Bitte identifizieren Sie sich');
+  M_Info.Lines.Add(AnsiToUTF8('                                 1.. Taste'));
 end;
 
 procedure TForm1.Button1Click(Sender: TObject);
