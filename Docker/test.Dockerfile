@@ -1,5 +1,8 @@
 FROM debian:bookworm-slim
 
+ARG UID=1000
+ARG GID=1000
+
 WORKDIR /app
 
 RUN apt-get update && \
@@ -7,8 +10,8 @@ RUN apt-get update && \
         fpc \
         fp-units-fcl && \
     rm -rf /var/lib/apt/lists/* && \
-    groupadd --system appgroup && \
-    useradd --system --gid appgroup --home-dir /app appuser && \
+    groupadd --system --gid ${GID} appgroup && \
+    useradd --system --uid ${UID} --gid appgroup --home-dir /app --shell /usr/sbin/nologin appuser
     mkdir -p /app/build && \
     chown -R appuser:appgroup /app
 
