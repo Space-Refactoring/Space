@@ -53,6 +53,7 @@
   - Mehr Schiffe dazukaufen
   - Einzelne Schiffe auf Aufträge loschicken
 - Easter Eggs
+- Schiffe malen/3d-drucken und einscannen statt zahlencodes
 
 ### Kontrovers
 
