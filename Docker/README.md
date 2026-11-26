@@ -46,6 +46,14 @@ Um die kompilierte grafische Anwendung direkt im Container zu testen, leiten wir
     docker compose run --rm runner
 ```
 
+### Testen
+
+Die automatischen Tests können wie folgt ausgeführt werden:
+
+```shell
+    docker compose run --rm tester
+```
+
 #### Linux
 
 Der Container nutzt die $DISPLAY-Umgebungsvariable. Gegebenenfalls musst du vorher lokale Verbindungen zum X-Server mit xhost +local: erlauben, damit sich das Fenster öffnen darf.

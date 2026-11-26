@@ -21,3 +21,13 @@ services:
       - /tmp/.X11-unix:/tmp/.X11-unix
     environment:
       - DISPLAY=${DISPLAY}
+  
+  tester:
+    build:
+      dockerfile: Docker/test.Dockerfile
+      args:
+        UID: ${APP_UID:-1000}
+        GID: ${APP_GID:-1000}
+    platform: linux/amd64
+    volumes:
+      - ${LOCAL_WORKSPACE_FOLDER:-.}:/app
