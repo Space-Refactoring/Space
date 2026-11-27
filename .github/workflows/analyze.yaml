@@ -62,14 +62,6 @@ jobs:
           EOF
           cp .sonar_stub/source/rtl/sys/SysInit.pas .sonar_stub/source/rtl/sys/sysinit.pas
           
-          cat << 'EOF' > .sonar_stub/source/rtl/sys/SysUtils.pas
-          unit SysUtils;
-          interface
-          implementation
-          end.
-          EOF
-          cp .sonar_stub/source/rtl/sys/SysUtils.pas .sonar_stub/source/rtl/sys/sysutils.pas
-
       - uses: SonarSource/sonarqube-scan-action@v8
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
