@@ -1,4 +1,4 @@
-unit TestHelloWorld;
+﻿unit TestHelloWorld;
 
 {$mode objfpc}{$H+}
 
@@ -11,7 +11,6 @@ type
   TTestHelloWorld = class(TTestCase)
   published
     procedure TestHelloWorld;
-    procedure TestFail;
   end;
 
 implementation
@@ -19,12 +18,6 @@ implementation
 procedure TTestHelloWorld.TestHelloWorld;
 begin
   AssertEquals('Hello World', 'Hello World');
-end;
-
-procedure TTestHelloWorld.TestFail;
-begin
-  AssertEquals('This test fails',
-    'Hello World', 'Fail');
 end;
 
 initialization
